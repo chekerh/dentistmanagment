@@ -6,23 +6,17 @@ import Badge, { getStatusBadge } from '../components/Badge';
 import Modal from '../components/Modal';
 import { mockAppointments, mockPatients } from '../data/mockData';
 import type { Appointment, TreatmentType } from '../types';
+import { useLang } from '../context/LanguageContext';
 
 const today = new Date('2026-03-01').toISOString().split('T')[0];
 
-function getTreatmentLabel(type: string) {
-  const labels: Record<string, string> = {
-    checkup: 'General Checkup', cleaning: 'Dental Cleaning', filling: 'Tooth Filling',
-    'root-canal': 'Root Canal Treatment', extraction: 'Tooth Extraction', crown: 'Crown Placement',
-    whitening: 'Teeth Whitening', orthodontics: 'Orthodontic Adjustment', implant: 'Dental Implant', other: 'Other',
-  };
-  return labels[type] ?? type;
-}
 
 const TREATMENT_TYPES: TreatmentType[] = [
   'checkup', 'cleaning', 'filling', 'root-canal', 'extraction', 'crown', 'whitening', 'orthodontics', 'implant', 'other',
 ];
 
 export default function AppointmentsPage() {
+  const { t } = useLang();
   const navigate = useNavigate();
   const [view, setView] = useState<'list' | 'calendar'>('list');
   const [filter, setFilter] = useState<'all' | 'today' | 'upcoming' | 'completed'>('all');
@@ -55,7 +49,7 @@ export default function AppointmentsPage() {
 
   const handleBookAppt = (e: React.FormEvent) => {
     e.preventDefault();
-    alert('Appointment booked! (Demo)');
+    alert(t.appointments.bookedDemo);
     setShowModal(false);
   };
 
@@ -148,7 +142,7 @@ export default function AppointmentsPage() {
                   <tr>
                     <td colSpan={8} className="text-center py-12 text-slate-400">
                       <span className="material-symbols-outlined text-4xl block mb-2">calendar_today</span>
-                      No appointments found
+                      {t.appointments.noFound}
                     </td>
                   </tr>
                 ) : filtered.sort((a, b) => `${a.date} ${a.time}` > `${b.date} ${b.time}` ? 1 : -1).map((appt) => (
@@ -172,7 +166,7 @@ export default function AppointmentsPage() {
                       <p className="text-sm font-medium text-slate-900 dark:text-white">{appt.date}</p>
                       <p className="text-xs text-slate-500">{appt.time}</p>
                     </td>
-                    <td className="px-5 py-3 text-sm text-slate-700 dark:text-slate-300">{getTreatmentLabel(appt.treatmentType)}</td>
+                    <td className="px-5 py-3 text-sm text-slate-700 dark:text-slate-300">{t.treatments[appt.treatmentType as keyof typeof t.treatments] || appt.treatmentType}</td>
                     <td className="px-5 py-3 text-sm text-slate-600 dark:text-slate-400">{appt.room}</td>
                     <td className="px-5 py-3 text-sm text-slate-600 dark:text-slate-400">{appt.duration}m</td>
                     <td className="px-5 py-3 text-sm font-medium text-slate-900 dark:text-white">${appt.fee}</td>
@@ -221,8 +215,8 @@ export default function AppointmentsPage() {
         </div>
       </div>
 
-      {/* Book Appointment Modal */}
-      <Modal isOpen={showModal} onClose={() => setShowModal(false)} title="Schedule Appointment" size="md">
+      {/* {t.appointments.bookBtn} Modal */}
+      <Modal isOpen={showModal} onClose={() => setShowModal(false)} title={t.appointments.modalTitle} size="md">
         <form onSubmit={handleBookAppt} className="flex flex-col gap-4">
           <label className="flex flex-col gap-1.5">
             <span className="text-sm font-medium text-slate-700 dark:text-slate-300">Patient *</span>
@@ -267,8 +261,8 @@ export default function AppointmentsPage() {
               onChange={(e) => setNewAppt(p => ({ ...p, treatmentType: e.target.value as TreatmentType }))}
               className="h-10 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-3 text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/30"
             >
-              {TREATMENT_TYPES.map(t => (
-                <option key={t} value={t}>{getTreatmentLabel(t)}</option>
+              {TREATMENT_TYPES.map(type => (
+                <option key={type} value={type}>{t.treatments[type] || type}</option>
               ))}
             </select>
           </label>
@@ -284,7 +278,7 @@ export default function AppointmentsPage() {
               </select>
             </label>
             <label className="flex flex-col gap-1.5">
-              <span className="text-sm font-medium text-slate-700 dark:text-slate-300">Duration (min)</span>
+              <span className="text-sm font-medium text-slate-700 dark:text-slate-300">{t.appointments.fieldDuration}</span>
               <input
                 type="number"
                 value={newAppt.duration}
@@ -296,7 +290,7 @@ export default function AppointmentsPage() {
             </label>
           </div>
           <label className="flex flex-col gap-1.5">
-            <span className="text-sm font-medium text-slate-700 dark:text-slate-300">Fee ($)</span>
+            <span className="text-sm font-medium text-slate-700 dark:text-slate-300">{t.appointments.fieldFee}</span>
             <input
               type="number"
               value={newAppt.fee}
@@ -327,7 +321,7 @@ export default function AppointmentsPage() {
         </form>
       </Modal>
 
-      {/* Appointment Details Modal */}
+      {/* {t.appointments.detailsTitle} Modal */}
       <Modal isOpen={!!selectedAppt} onClose={() => setSelectedAppt(null)} title="Appointment Details">
         {selectedAppt && (
           <div className="flex flex-col gap-4">
@@ -349,7 +343,7 @@ export default function AppointmentsPage() {
                 { label: 'Time', value: selectedAppt.time },
                 { label: 'Duration', value: `${selectedAppt.duration} min` },
                 { label: 'Room', value: selectedAppt.room },
-                { label: 'Treatment', value: getTreatmentLabel(selectedAppt.treatmentType) },
+                { label: 'Treatment', value: t.treatments[selectedAppt.treatmentType as keyof typeof t.treatments] || selectedAppt.treatmentType },
                 { label: 'Dentist', value: selectedAppt.dentist },
                 { label: 'Fee', value: `$${selectedAppt.fee}` },
               ].map(({ label, value }) => (
@@ -372,7 +366,7 @@ export default function AppointmentsPage() {
               </button>
               <button onClick={() => navigate('/billing')}
                 className="flex-1 py-2 rounded-lg bg-green-600 text-white text-sm font-medium hover:bg-green-700 transition-colors">
-                Process Payment
+                {t.appointments.processPayment}
               </button>
             </div>
           </div>

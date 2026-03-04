@@ -7,6 +7,7 @@ import Badge, { getStatusBadge } from '../components/Badge';
 import Modal from '../components/Modal';
 import { mockAppointments, mockPatients, mockInventory, mockNotifications } from '../data/mockData';
 import type { Appointment } from '../types';
+import { useLang } from '../context/LanguageContext';
 
 const today = new Date('2026-03-01').toISOString().split('T')[0];
 
@@ -17,23 +18,8 @@ function formatTime(time: string) {
   return { hour: `${hour}:${m.toString().padStart(2, '0')}`, period };
 }
 
-function getTreatmentLabel(type: string) {
-  const labels: Record<string, string> = {
-    checkup: 'General Checkup',
-    cleaning: 'Dental Cleaning',
-    filling: 'Tooth Filling',
-    'root-canal': 'Root Canal Treatment',
-    extraction: 'Tooth Extraction',
-    crown: 'Crown Placement',
-    whitening: 'Teeth Whitening',
-    orthodontics: 'Orthodontic Adjustment',
-    implant: 'Dental Implant',
-    other: 'Other Treatment',
-  };
-  return labels[type] ?? type;
-}
-
 export default function DashboardPage() {
+  const { t } = useLang();
   const navigate = useNavigate();
   const [selectedAppt, setSelectedAppt] = useState<Appointment | null>(null);
 
@@ -53,7 +39,7 @@ export default function DashboardPage() {
             className="flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white hover:bg-primary-hover transition-colors shadow-sm"
           >
             <span className="material-symbols-outlined text-[20px]">add</span>
-            New Appointment
+            {t.dashboard.newAppointment}
           </button>
         }
       />
@@ -62,7 +48,7 @@ export default function DashboardPage() {
         {/* Stat Cards */}
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <StatCard
-            title="Today's Appointments"
+            title={t.dashboard.todayAppts}
             value={todayAppts.length}
             icon="calendar_today"
             iconBg="bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400"
@@ -70,7 +56,7 @@ export default function DashboardPage() {
             trendUp
           />
           <StatCard
-            title="New Patients"
+            title={t.dashboard.newPatients}
             value={newPatients}
             icon="person_add"
             iconBg="bg-purple-50 text-purple-600 dark:bg-purple-900/30 dark:text-purple-400"
@@ -78,37 +64,37 @@ export default function DashboardPage() {
             trendUp
           />
           <StatCard
-            title="Pending Labs"
+            title={t.dashboard.pendingLabs}
             value={pendingLabs}
             icon="science"
             iconBg="bg-orange-50 text-orange-600 dark:bg-orange-900/30 dark:text-orange-400"
-            subtitle="Processing"
+            subtitle={t.dashboard.processing}
           />
           <StatCard
-            title="Inventory Alerts"
+            title={t.dashboard.inventoryAlerts}
             value={lowStockCount}
             icon="warning"
             iconBg="bg-red-50 text-red-600 dark:bg-red-900/30 dark:text-red-400"
-            subtitle="Low Stock"
+            subtitle={t.dashboard.lowStock}
           />
         </div>
 
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-          {/* Today's Schedule */}
+          {/* {t.dashboard.todaySchedule} */}
           <div className="lg:col-span-2 flex flex-col rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm">
             <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 p-5">
-              <h3 className="text-lg font-bold text-slate-900 dark:text-white">Today's Schedule</h3>
+              <h3 className="text-lg font-bold text-slate-900 dark:text-white">{t.dashboard.todaySchedule}</h3>
               <button
                 onClick={() => navigate('/appointments')}
                 className="text-sm font-medium text-primary hover:text-primary-hover"
               >
-                View Calendar
+                {t.dashboard.viewCalendar}
               </button>
             </div>
             {todayAppts.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-12 text-slate-400">
                 <span className="material-symbols-outlined text-5xl mb-2">calendar_today</span>
-                <p>No appointments today</p>
+                <p>{t.dashboard.noAppointmentsToday}</p>
               </div>
             ) : (
               <div className="flex flex-col divide-y divide-slate-100 dark:divide-slate-800">
@@ -128,7 +114,7 @@ export default function DashboardPage() {
                         <div>
                           <p className="font-semibold text-slate-900 dark:text-white">{appt.patientName}</p>
                           <p className="text-sm text-slate-500 dark:text-slate-400">
-                            {getTreatmentLabel(appt.treatmentType)} • {appt.room}
+                            {t.treatments[appt.treatmentType as keyof typeof t.treatments] || appt.treatmentType} • {appt.room}
                           </p>
                         </div>
                       </div>
@@ -149,15 +135,15 @@ export default function DashboardPage() {
 
           {/* Right Column */}
           <div className="flex flex-col gap-6">
-            {/* Quick Actions */}
+            {/* {t.dashboard.quickActions} */}
             <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 shadow-sm">
-              <h3 className="text-base font-bold text-slate-900 dark:text-white mb-4">Quick Actions</h3>
+              <h3 className="text-base font-bold text-slate-900 dark:text-white mb-4">{t.dashboard.quickActions}</h3>
               <div className="grid grid-cols-2 gap-3">
                 {[
-                  { icon: 'person_add', label: 'Add Patient', to: '/patients/new', color: 'text-blue-600 bg-blue-50 dark:bg-blue-900/30 dark:text-blue-400' },
-                  { icon: 'calendar_add_on', label: 'Schedule', to: '/appointments/new', color: 'text-purple-600 bg-purple-50 dark:bg-purple-900/30 dark:text-purple-400' },
-                  { icon: 'add_box', label: 'Add Stock', to: '/inventory', color: 'text-green-600 bg-green-50 dark:bg-green-900/30 dark:text-green-400' },
-                  { icon: 'receipt_long', label: 'New Bill', to: '/billing', color: 'text-orange-600 bg-orange-50 dark:bg-orange-900/30 dark:text-orange-400' },
+                  { icon: 'person_add', label: t.dashboard.addPatient, to: '/patients/new', color: 'text-blue-600 bg-blue-50 dark:bg-blue-900/30 dark:text-blue-400' },
+                  { icon: 'calendar_add_on', label: t.dashboard.schedule, to: '/appointments/new', color: 'text-purple-600 bg-purple-50 dark:bg-purple-900/30 dark:text-purple-400' },
+                  { icon: 'add_box', label: t.dashboard.addStock, to: '/inventory', color: 'text-green-600 bg-green-50 dark:bg-green-900/30 dark:text-green-400' },
+                  { icon: 'receipt_long', label: t.dashboard.newBill, to: '/billing', color: 'text-orange-600 bg-orange-50 dark:bg-orange-900/30 dark:text-orange-400' },
                 ].map((action) => (
                   <button
                     key={action.to}
@@ -176,7 +162,7 @@ export default function DashboardPage() {
             {/* Alerts */}
             <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 shadow-sm">
               <div className="flex items-center justify-between mb-4">
-                <h3 className="text-base font-bold text-slate-900 dark:text-white">Alerts</h3>
+                <h3 className="text-base font-bold text-slate-900 dark:text-white">{t.dashboard.alerts}</h3>
                 <span className="text-xs bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400 rounded-full px-2 py-0.5 font-medium">{unreadNotifs} new</span>
               </div>
               <div className="flex flex-col gap-3">
@@ -201,30 +187,30 @@ export default function DashboardPage() {
                   onClick={() => navigate('/notifications')}
                   className="mt-1 text-sm font-medium text-primary hover:text-primary-hover text-center"
                 >
-                  View all alerts →
+                  {t.dashboard.viewAllAlerts}
                 </button>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Recent Patients */}
+        {/* {t.dashboard.recentPatients} */}
         <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm">
           <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 p-5">
-            <h3 className="text-lg font-bold text-slate-900 dark:text-white">Recent Patients</h3>
+            <h3 className="text-lg font-bold text-slate-900 dark:text-white">{t.dashboard.recentPatients}</h3>
             <button onClick={() => navigate('/patients')} className="text-sm font-medium text-primary hover:text-primary-hover">
-              View All
+              {t.dashboard.viewAll}
             </button>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
                 <tr className="border-b border-slate-100 dark:border-slate-800">
-                  <th className="text-left text-xs font-medium text-slate-500 dark:text-slate-400 px-5 py-3">Patient</th>
-                  <th className="text-left text-xs font-medium text-slate-500 dark:text-slate-400 px-5 py-3">Last Visit</th>
-                  <th className="text-left text-xs font-medium text-slate-500 dark:text-slate-400 px-5 py-3">Next Appointment</th>
-                  <th className="text-left text-xs font-medium text-slate-500 dark:text-slate-400 px-5 py-3">Balance</th>
-                  <th className="text-left text-xs font-medium text-slate-500 dark:text-slate-400 px-5 py-3">Status</th>
+                  <th className="text-left text-xs font-medium text-slate-500 dark:text-slate-400 px-5 py-3">{t.dashboard.tablePatient}</th>
+                  <th className="text-left text-xs font-medium text-slate-500 dark:text-slate-400 px-5 py-3">{t.dashboard.tableLastVisit}</th>
+                  <th className="text-left text-xs font-medium text-slate-500 dark:text-slate-400 px-5 py-3">{t.dashboard.tableNextAppt}</th>
+                  <th className="text-left text-xs font-medium text-slate-500 dark:text-slate-400 px-5 py-3">{t.dashboard.tableBalance}</th>
+                  <th className="text-left text-xs font-medium text-slate-500 dark:text-slate-400 px-5 py-3">{t.dashboard.tableStatus}</th>
                 </tr>
               </thead>
               <tbody>
@@ -269,7 +255,7 @@ export default function DashboardPage() {
       <Modal
         isOpen={!!selectedAppt}
         onClose={() => setSelectedAppt(null)}
-        title="Appointment Details"
+        title={t.dashboard.apptDetails}
       >
         {selectedAppt && (
           <div className="flex flex-col gap-4">
@@ -279,7 +265,7 @@ export default function DashboardPage() {
               </div>
               <div>
                 <h4 className="text-lg font-semibold text-slate-900 dark:text-white">{selectedAppt.patientName}</h4>
-                <p className="text-sm text-slate-500">ID: {selectedAppt.patientId}</p>
+                <p className="text-sm text-slate-500">{t.dashboard.idPrefix} {selectedAppt.patientId}</p>
               </div>
               <div className="ml-auto">
                 <Badge variant={getStatusBadge(selectedAppt.status)}>
@@ -289,13 +275,13 @@ export default function DashboardPage() {
             </div>
             <div className="grid grid-cols-2 gap-3 bg-slate-50 dark:bg-slate-800 rounded-lg p-4">
               {[
-                { label: 'Date', value: selectedAppt.date },
-                { label: 'Time', value: selectedAppt.time },
-                { label: 'Duration', value: `${selectedAppt.duration} min` },
-                { label: 'Room', value: selectedAppt.room },
-                { label: 'Treatment', value: getTreatmentLabel(selectedAppt.treatmentType) },
-                { label: 'Dentist', value: selectedAppt.dentist },
-                { label: 'Fee', value: `$${selectedAppt.fee}` },
+                { label: t.dashboard.fieldDate, value: selectedAppt.date },
+                { label: t.dashboard.fieldTime, value: selectedAppt.time },
+                { label: t.dashboard.fieldDuration, value: `${selectedAppt.duration} ${t.common.min}` },
+                { label: t.dashboard.fieldRoom, value: selectedAppt.room },
+                { label: t.dashboard.fieldTreatment, value: t.treatments[selectedAppt.treatmentType as keyof typeof t.treatments] || selectedAppt.treatmentType },
+                { label: t.dashboard.fieldDentist, value: selectedAppt.dentist },
+                { label: t.dashboard.fieldFee, value: `$${selectedAppt.fee}` },
               ].map(({ label, value }) => (
                 <div key={label}>
                   <p className="text-xs text-slate-500 dark:text-slate-400">{label}</p>
@@ -305,7 +291,7 @@ export default function DashboardPage() {
             </div>
             {selectedAppt.notes && (
               <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800/50 rounded-lg p-3">
-                <p className="text-xs font-medium text-yellow-700 dark:text-yellow-400 mb-1">Notes</p>
+                <p className="text-xs font-medium text-yellow-700 dark:text-yellow-400 mb-1">{t.dashboard.fieldNotes}</p>
                 <p className="text-sm text-yellow-800 dark:text-yellow-300">{selectedAppt.notes}</p>
               </div>
             )}
@@ -314,13 +300,13 @@ export default function DashboardPage() {
                 onClick={() => { setSelectedAppt(null); navigate(`/patients/${selectedAppt.patientId}`); }}
                 className="flex-1 py-2 rounded-lg border border-slate-200 dark:border-slate-700 text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
               >
-                View Patient
+                {t.dashboard.viewPatient}
               </button>
               <button
                 onClick={() => setSelectedAppt(null)}
                 className="flex-1 py-2 rounded-lg bg-primary text-white text-sm font-medium hover:bg-primary-hover transition-colors"
               >
-                Close
+                {t.dashboard.close}
               </button>
             </div>
           </div>

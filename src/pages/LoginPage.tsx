@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import { useNavigate, Navigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useLang } from '../context/LanguageContext';
 
 export default function LoginPage() {
+  const { t } = useLang();
   const { user, login } = useAuth();
   const navigate = useNavigate();
   const [username, setUsername] = useState('');
@@ -25,7 +27,7 @@ export default function LoginPage() {
     if (success) {
       navigate(username === 'patient' ? '/portal' : '/dashboard');
     } else {
-      setError('Invalid credentials. Try admin/admin or patient/patient');
+      setError(t.login.invalidCredentials);
     }
   };
 
@@ -42,8 +44,8 @@ export default function LoginPage() {
             <span className="material-symbols-outlined text-4xl">dentistry</span>
           </div>
           <div className="text-center">
-            <h2 className="text-white text-2xl font-bold tracking-tight">Staff Portal Login</h2>
-            <p className="text-text-secondary text-sm mt-1">Welcome back. Please enter your details.</p>
+            <h2 className="text-white text-2xl font-bold tracking-tight">{t.login.title}</h2>
+            <p className="text-text-secondary text-sm mt-1">{t.login.subtitle}</p>
           </div>
         </div>
 
@@ -57,11 +59,11 @@ export default function LoginPage() {
 
           {/* Username */}
           <label className="flex flex-col gap-2">
-            <span className="text-white text-sm font-medium">Username or ID</span>
+            <span className="text-white text-sm font-medium">{t.login.usernameLabel}</span>
             <div className="relative">
               <input
                 type="text"
-                placeholder="Enter your staff ID"
+                placeholder={t.login.usernamePlaceholder}
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 className="w-full h-12 bg-[#111822] border border-border-dark rounded-lg px-4 pr-10 text-white placeholder-text-secondary focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-colors"
@@ -75,11 +77,11 @@ export default function LoginPage() {
 
           {/* Password */}
           <label className="flex flex-col gap-2">
-            <span className="text-white text-sm font-medium">Password</span>
+            <span className="text-white text-sm font-medium">{t.login.passwordLabel}</span>
             <div className="relative">
               <input
                 type={showPassword ? 'text' : 'password'}
-                placeholder="Enter your password"
+                placeholder={t.login.passwordPlaceholder}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-full h-12 bg-[#111822] border border-border-dark rounded-lg px-4 pr-10 text-white placeholder-text-secondary focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-colors"
@@ -106,10 +108,10 @@ export default function LoginPage() {
                 onChange={(e) => setRememberMe(e.target.checked)}
                 className="h-4 w-4 rounded border-border-dark bg-transparent accent-primary"
               />
-              <span className="text-text-secondary text-sm group-hover:text-white transition-colors">Remember me</span>
+              <span className="text-text-secondary text-sm group-hover:text-white transition-colors">{t.login.rememberMe}</span>
             </label>
             <a href="#" className="text-primary text-sm font-medium hover:text-blue-400 transition-colors">
-              Forgot password?
+              {t.login.forgotPassword}
             </a>
           </div>
 
@@ -130,7 +132,7 @@ export default function LoginPage() {
 
         {/* Demo credentials hint */}
         <div className="bg-primary/10 border border-primary/20 rounded-lg px-4 py-3 text-xs text-text-secondary">
-          <p className="font-medium text-primary mb-1">Demo Credentials</p>
+          <p className="font-medium text-primary mb-1">{t.login.demoTitle}</p>
           <p>Admin: <span className="text-white">admin / admin</span></p>
           <p>Patient: <span className="text-white">patient / patient</span></p>
         </div>
@@ -138,15 +140,15 @@ export default function LoginPage() {
         {/* Footer */}
         <div className="text-center pt-2 border-t border-border-dark">
           <p className="text-text-secondary text-xs">
-            Need access? Contact the{' '}
-            <a href="#" className="text-white font-medium hover:underline">Clinic Administrator</a>.
+            {t.login.needAccess}{' '}
+            <a href="#" className="text-white font-medium hover:underline">{t.login.clinicAdmin}</a>.
           </p>
         </div>
       </div>
 
       <div className="mt-8 z-10">
         <p className="text-[10px] text-slate-600 uppercase tracking-widest text-center">
-          Powered by DentalCare Systems
+          {t.login.poweredBy}
         </p>
       </div>
     </div>

@@ -7,8 +7,10 @@ import Layout from '../components/Layout';
 import Topbar from '../components/Topbar';
 import StatCard from '../components/StatCard';
 import { mockRevenueData, mockTreatmentDistribution, mockPayments } from '../data/mockData';
+import { useLang } from '../context/LanguageContext';
 
 export default function ReportsPage() {
+  const { t } = useLang();
   const totalRevenue = mockRevenueData.reduce((s, d) => s + d.revenue, 0);
   const totalExpenses = mockRevenueData.reduce((s, d) => s + d.expenses, 0);
   const totalPatients = mockRevenueData.reduce((s, d) => s + d.patients, 0);
@@ -42,7 +44,7 @@ export default function ReportsPage() {
         {/* KPI Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <StatCard
-            title="Total Revenue (6mo)"
+            title={t.reports.statRevenue}
             value={`$${(totalRevenue / 1000).toFixed(1)}k`}
             icon="trending_up"
             iconBg="bg-green-50 text-green-600 dark:bg-green-900/30 dark:text-green-400"
@@ -50,7 +52,7 @@ export default function ReportsPage() {
             trendUp
           />
           <StatCard
-            title="Net Profit (6mo)"
+            title={t.reports.statProfit}
             value={`$${(netProfit / 1000).toFixed(1)}k`}
             icon="account_balance"
             iconBg="bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400"
@@ -58,7 +60,7 @@ export default function ReportsPage() {
             trendUp
           />
           <StatCard
-            title="Total Patients (6mo)"
+            title={t.reports.statPatients}
             value={totalPatients}
             icon="group"
             iconBg="bg-purple-50 text-purple-600 dark:bg-purple-900/30 dark:text-purple-400"
@@ -66,7 +68,7 @@ export default function ReportsPage() {
             trendUp
           />
           <StatCard
-            title="Overdue Payments"
+            title={t.reports.statOverdue}
             value={`$${overdueTotal.toFixed(0)}`}
             icon="warning"
             iconBg="bg-red-50 text-red-600 dark:bg-red-900/30 dark:text-red-400"
@@ -76,7 +78,7 @@ export default function ReportsPage() {
 
         {/* Revenue & Expense Chart */}
         <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm">
-          <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-4">Revenue vs Expenses (Last 7 months)</h3>
+          <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-4">{t.reports.chartRevExp}</h3>
           <ResponsiveContainer width="100%" height={280}>
             <AreaChart data={mockRevenueData} margin={{ top: 5, right: 10, left: 0, bottom: 0 }}>
               <defs>
@@ -106,7 +108,7 @@ export default function ReportsPage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Patients per Month */}
           <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm">
-            <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-4">Patient Volume per Month</h3>
+            <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-4">{t.reports.chartPatients}</h3>
             <ResponsiveContainer width="100%" height={220}>
               <BarChart data={mockRevenueData} margin={{ top: 5, right: 10, left: 0, bottom: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" className="dark:stroke-slate-700" />
@@ -120,7 +122,7 @@ export default function ReportsPage() {
             </ResponsiveContainer>
           </div>
 
-          {/* Treatment Distribution */}
+          {/* {t.reports.chartTreatments} */}
           <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm">
             <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-4">Treatment Distribution</h3>
             <div className="flex items-center gap-6">
@@ -161,7 +163,7 @@ export default function ReportsPage() {
         {/* Payment Summary Table */}
         <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
           <div className="p-5 border-b border-slate-100 dark:border-slate-800">
-            <h3 className="text-lg font-bold text-slate-900 dark:text-white">Recent Payments</h3>
+            <h3 className="text-lg font-bold text-slate-900 dark:text-white">{t.reports.recentPayments}</h3>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full">

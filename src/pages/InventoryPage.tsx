@@ -5,6 +5,7 @@ import Badge from '../components/Badge';
 import Modal from '../components/Modal';
 import { mockInventory } from '../data/mockData';
 import type { InventoryItem, InventoryCategory } from '../types';
+import { useLang } from '../context/LanguageContext';
 
 const CATEGORIES: InventoryCategory[] = ['consumables', 'equipment', 'medications', 'instruments', 'protective', 'other'];
 
@@ -28,6 +29,7 @@ function getStockStatus(item: InventoryItem) {
 }
 
 export default function InventoryPage() {
+  const { t } = useLang();
   const [search, setSearch] = useState('');
   const [catFilter, setCatFilter] = useState<'all' | InventoryCategory>('all');
   const [stockFilter, setStockFilter] = useState<'all' | 'low' | 'ok'>('all');
@@ -58,7 +60,7 @@ export default function InventoryPage() {
 
   const handleAdd = (e: React.FormEvent) => {
     e.preventDefault();
-    alert('Item added! (Demo)');
+    alert(t.inventory.addedDemo);
     setShowAddModal(false);
   };
 
@@ -81,10 +83,10 @@ export default function InventoryPage() {
         {/* Stats */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           {[
-            { label: 'Total Items', value: mockInventory.length, icon: 'inventory_2', color: 'text-blue-600 bg-blue-50 dark:bg-blue-900/20 dark:text-blue-400' },
+            { label: t.inventory.statTotalItems, value: mockInventory.length, icon: 'inventory_2', color: 'text-blue-600 bg-blue-50 dark:bg-blue-900/20 dark:text-blue-400' },
             { label: 'Low Stock', value: lowStockItems.length, icon: 'warning', color: 'text-red-600 bg-red-50 dark:bg-red-900/20 dark:text-red-400' },
-            { label: 'Expiring Soon', value: expiringItems.length, icon: 'schedule', color: 'text-orange-600 bg-orange-50 dark:bg-orange-900/20 dark:text-orange-400' },
-            { label: 'Total Value', value: `$${totalValue.toFixed(0)}`, icon: 'payments', color: 'text-green-600 bg-green-50 dark:bg-green-900/20 dark:text-green-400' },
+            { label: t.inventory.statExpiring, value: expiringItems.length, icon: 'schedule', color: 'text-orange-600 bg-orange-50 dark:bg-orange-900/20 dark:text-orange-400' },
+            { label: t.inventory.statTotalValue, value: `$${totalValue.toFixed(0)}`, icon: 'payments', color: 'text-green-600 bg-green-50 dark:bg-green-900/20 dark:text-green-400' },
           ].map((s) => (
             <div key={s.label} className="flex items-center gap-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-4 shadow-sm">
               <div className={`h-9 w-9 rounded-lg flex items-center justify-center flex-shrink-0 ${s.color}`}>
@@ -148,14 +150,14 @@ export default function InventoryPage() {
             <table className="w-full">
               <thead>
                 <tr className="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-800">
-                  {['Item', 'Category', 'SKU', 'Quantity', 'Reorder Threshold', 'Unit Cost', 'Supplier', 'Expiry', 'Status', ''].map((h) => (
+                  {['Item', 'Category', 'SKU', 'Quantity', t.inventory.fieldReorderThreshold, 'Unit Cost', 'Supplier', 'Expiry', 'Status', ''].map((h) => (
                     <th key={h} className="text-left text-xs font-semibold text-slate-500 dark:text-slate-400 px-4 py-3 uppercase tracking-wide whitespace-nowrap">{h}</th>
                   ))}
                 </tr>
               </thead>
               <tbody>
                 {filtered.length === 0 ? (
-                  <tr><td colSpan={10} className="text-center py-12 text-slate-400">No items found</td></tr>
+                  <tr><td colSpan={10} className="text-center py-12 text-slate-400">{t.inventory.noFound}</td></tr>
                 ) : filtered.map((item) => {
                   const stock = getStockStatus(item);
                   const pct = Math.min((item.quantity / (item.reorderThreshold * 3)) * 100, 100);
@@ -211,7 +213,7 @@ export default function InventoryPage() {
       </div>
 
       {/* Item Detail Modal */}
-      <Modal isOpen={!!selectedItem} onClose={() => setSelectedItem(null)} title="Item Details">
+      <Modal isOpen={!!selectedItem} onClose={() => setSelectedItem(null)} title={t.inventory.detailTitle}>
         {selectedItem && (
           <div className="flex flex-col gap-5">
             <div className="flex items-start justify-between">
@@ -232,8 +234,8 @@ export default function InventoryPage() {
                 { label: 'Unit Cost', value: `$${selectedItem.unitCost.toFixed(2)}` },
                 { label: 'Total Value', value: `$${(selectedItem.quantity * selectedItem.unitCost).toFixed(2)}` },
                 { label: 'Supplier', value: selectedItem.supplier },
-                { label: 'Last Restocked', value: selectedItem.lastRestocked },
-                { label: 'Expiration', value: selectedItem.expirationDate ?? 'N/A' },
+                { label: t.inventory.detailLastRestocked, value: selectedItem.lastRestocked },
+                { label: t.inventory.detailExpiry, value: selectedItem.expirationDate ?? 'N/A' },
                 { label: 'Location', value: selectedItem.location },
               ].map(({ label, value }) => (
                 <div key={label}>
@@ -246,13 +248,13 @@ export default function InventoryPage() {
               <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800/50 rounded-lg p-3 flex items-center gap-3">
                 <span className="material-symbols-outlined text-red-500 text-[20px]">warning</span>
                 <p className="text-sm text-red-700 dark:text-red-300">
-                  Stock is at or below reorder threshold. Please reorder soon.
+                  {t.inventory.lowStockWarning}
                 </p>
               </div>
             )}
             <div className="flex gap-3">
               <button
-                onClick={() => { alert('Reorder placed! (Demo)'); setSelectedItem(null); }}
+                onClick={() => { alert(t.inventory.reorderDemo); setSelectedItem(null); }}
                 className="flex-1 py-2.5 rounded-lg bg-primary text-white text-sm font-medium hover:bg-primary-hover transition-colors"
               >
                 Reorder Stock
@@ -269,7 +271,7 @@ export default function InventoryPage() {
       </Modal>
 
       {/* Add Item Modal */}
-      <Modal isOpen={showAddModal} onClose={() => setShowAddModal(false)} title="Add Inventory Item" size="lg">
+      <Modal isOpen={showAddModal} onClose={() => setShowAddModal(false)} title={t.inventory.addTitle} size="lg">
         <form onSubmit={handleAdd} className="flex flex-col gap-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {[
@@ -320,7 +322,7 @@ export default function InventoryPage() {
             </label>
           </div>
           <label className="flex flex-col gap-1.5">
-            <span className="text-sm font-medium text-slate-700 dark:text-slate-300">Description</span>
+            <span className="text-sm font-medium text-slate-700 dark:text-slate-300">{t.inventory.fieldDescription}</span>
             <textarea
               value={newItem.description}
               onChange={(e) => setNewItem(p => ({ ...p, description: e.target.value }))}

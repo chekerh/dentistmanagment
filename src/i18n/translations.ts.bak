@@ -1,0 +1,133 @@
+export const translations = {
+  en: {
+    brand: 'DentalCare',
+    brandSub: 'Management System',
+    nav: {
+      dashboard: 'Dashboard',
+      patients: 'Patient Records',
+      appointments: 'Appointments',
+      inventory: 'Inventory',
+      reports: 'Reports & Analytics',
+      billing: 'Billing & Payments',
+      notifications: 'Notifications',
+      settings: 'Settings',
+    },
+    pages: {
+      dashboard: 'Dashboard Overview',
+      patients: 'Patient Records',
+      patientDetail: 'Patient Chart',
+      patientNotFound: 'Patient Not Found',
+      appointments: 'Appointments',
+      appointmentSession: 'Appointment Session',
+      sessionNotFound: 'Session Not Found',
+      inventory: 'Inventory & Stock',
+      reports: 'Reports & Analytics',
+      financialReport: 'Financial Report',
+      billing: 'Billing & Payments',
+      notifications: 'Notifications',
+      settings: 'Settings',
+    },
+    groups: {
+      main: 'Main',
+      management: 'Management',
+      finance: 'Finance',
+      system: 'System',
+    },
+    role: {
+      admin: 'Administrator',
+      patient: 'Patient',
+    },
+    actions: {
+      logout: 'Log out',
+    },
+  },
+
+  fr: {
+    brand: 'DentalCare',
+    brandSub: 'Système de Gestion',
+    nav: {
+      dashboard: 'Tableau de bord',
+      patients: 'Dossiers patients',
+      appointments: 'Rendez-vous',
+      inventory: 'Inventaire',
+      reports: 'Rapports & Analyses',
+      billing: 'Facturation',
+      notifications: 'Notifications',
+      settings: 'Paramètres',
+    },
+    pages: {
+      dashboard: "Vue d'ensemble",
+      patients: 'Dossiers patients',
+      patientDetail: 'Fiche du patient',
+      patientNotFound: 'Patient introuvable',
+      appointments: 'Rendez-vous',
+      appointmentSession: 'Session de consultation',
+      sessionNotFound: 'Session introuvable',
+      inventory: 'Inventaire & Stock',
+      reports: 'Rapports & Analyses',
+      financialReport: 'Rapport financier',
+      billing: 'Facturation & Paiements',
+      notifications: 'Notifications',
+      settings: 'Paramètres',
+    },
+    groups: {
+      main: 'Principal',
+      management: 'Gestion',
+      finance: 'Finance',
+      system: 'Système',
+    },
+    role: {
+      admin: 'Administrateur',
+      patient: 'Patient',
+    },
+    actions: {
+      logout: 'Déconnexion',
+    },
+  },
+
+  ar: {
+    brand: 'دينتال كير',
+    brandSub: 'نظام الإدارة',
+    nav: {
+      dashboard: 'لوحة التحكم',
+      patients: 'سجلات المرضى',
+      appointments: 'المواعيد',
+      inventory: 'المخزون',
+      reports: 'التقارير والتحليلات',
+      billing: 'الفواتير والمدفوعات',
+      notifications: 'الإشعارات',
+      settings: 'الإعدادات',
+    },
+    pages: {
+      dashboard: 'نظرة عامة',
+      patients: 'سجلات المرضى',
+      patientDetail: 'ملف المريض',
+      patientNotFound: 'المريض غير موجود',
+      appointments: 'المواعيد',
+      appointmentSession: 'جلسة الموعد',
+      sessionNotFound: 'الجلسة غير موجودة',
+      inventory: 'المخزون والمواد',
+      reports: 'التقارير والتحليلات',
+      financialReport: 'التقرير المالي',
+      billing: 'الفواتير والمدفوعات',
+      notifications: 'الإشعارات',
+      settings: 'الإعدادات',
+    },
+    groups: {
+      main: 'الرئيسية',
+      management: 'الإدارة',
+      finance: 'المالية',
+      system: 'النظام',
+    },
+    role: {
+      admin: 'مدير',
+      patient: 'مريض',
+    },
+    actions: {
+      logout: 'تسجيل الخروج',
+    },
+  },
+};
+
+export type Language = keyof typeof translations;
+export type Translations = typeof translations['en'];

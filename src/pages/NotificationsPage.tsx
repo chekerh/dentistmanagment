@@ -4,8 +4,10 @@ import Topbar from '../components/Topbar';
 import Badge, { getStatusBadge } from '../components/Badge';
 import { mockNotifications } from '../data/mockData';
 import type { Notification } from '../types';
+import { useLang } from '../context/LanguageContext';
 
 export default function NotificationsPage() {
+  const { t } = useLang();
   const [notifications, setNotifications] = useState(mockNotifications);
   const [filter, setFilter] = useState<'all' | 'unread'>('all');
 
@@ -73,7 +75,7 @@ export default function NotificationsPage() {
               onClick={markAllRead}
               className="text-sm font-medium text-primary hover:text-primary-hover transition-colors"
             >
-              Mark all as read
+              {t.notifications.markAllRead}
             </button>
           )}
         </div>
@@ -122,13 +124,13 @@ export default function NotificationsPage() {
 
         {/* Quick Links */}
         <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-5">
-          <h3 className="text-sm font-semibold text-slate-900 dark:text-white mb-4 uppercase tracking-wide">Notification Settings</h3>
+          <h3 className="text-sm font-semibold text-slate-900 dark:text-white mb-4 uppercase tracking-wide">{t.notifications.settingsTitle}</h3>
           <div className="flex flex-col gap-3">
             {[
-              { label: 'Appointment reminders', desc: 'Get notified 30 min before appointments', enabled: true },
-              { label: 'Low stock alerts', desc: 'Alert when inventory falls below threshold', enabled: true },
-              { label: 'Payment reminders', desc: 'Notify patients of overdue payments', enabled: false },
-              { label: 'System updates', desc: 'Receive system maintenance notices', enabled: true },
+              { label: t.notifications.apptReminders, desc: t.notifications.apptRemindersDesc, enabled: true },
+              { label: t.notifications.lowStockAlerts, desc: t.notifications.lowStockDesc, enabled: true },
+              { label: t.notifications.paymentReminders, desc: t.notifications.paymentRemindersDesc, enabled: false },
+              { label: t.notifications.systemUpdates, desc: t.notifications.systemUpdatesDesc, enabled: true },
             ].map((setting) => (
               <div key={setting.label} className="flex items-center justify-between">
                 <div>

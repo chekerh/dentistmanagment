@@ -2,8 +2,10 @@ import { useState } from 'react';
 import Layout from '../components/Layout';
 import Topbar from '../components/Topbar';
 import { useAuth } from '../context/AuthContext';
+import { useLang } from '../context/LanguageContext';
 
 export default function SettingsPage() {
+  const { t } = useLang();
   const { user } = useAuth();
   const [activeTab, setActiveTab] = useState<'profile' | 'clinic' | 'security' | 'notifications'>('profile');
   const [profile, setProfile] = useState({
@@ -63,7 +65,7 @@ export default function SettingsPage() {
         {saved && (
           <div className="flex items-center gap-3 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800/50 rounded-xl px-4 py-3">
             <span className="material-symbols-outlined text-green-600 text-[20px]">check_circle</span>
-            <p className="text-sm font-medium text-green-700 dark:text-green-300">Settings saved successfully!</p>
+            <p className="text-sm font-medium text-green-700 dark:text-green-300">{t.settings.savedSuccess}</p>
           </div>
         )}
 
@@ -78,7 +80,7 @@ export default function SettingsPage() {
                 <h3 className="text-lg font-bold text-slate-900 dark:text-white">{profile.name}</h3>
                 <p className="text-sm text-slate-500 dark:text-slate-400">{profile.specialty}</p>
                 <button type="button" className="mt-2 text-xs text-primary hover:text-primary-hover font-medium">
-                  Change Photo
+                  {t.settings.changePhoto}
                 </button>
               </div>
             </div>
@@ -102,7 +104,7 @@ export default function SettingsPage() {
               ))}
             </div>
             <button type="submit" className="self-start px-6 py-2.5 bg-primary text-white rounded-lg text-sm font-medium hover:bg-primary-hover transition-colors">
-              Save Changes
+              {t.settings.saveChanges}
             </button>
           </form>
         )}
@@ -110,7 +112,7 @@ export default function SettingsPage() {
         {/* Clinic Tab */}
         {activeTab === 'clinic' && (
           <form onSubmit={handleSave} className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm flex flex-col gap-6">
-            <h3 className="text-lg font-bold text-slate-900 dark:text-white">Clinic Information</h3>
+            <h3 className="text-lg font-bold text-slate-900 dark:text-white">{t.settings.clinicInfo}</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {[
                 { label: 'Clinic Name', key: 'name' },
@@ -141,7 +143,7 @@ export default function SettingsPage() {
               />
             </label>
             <button type="submit" className="self-start px-6 py-2.5 bg-primary text-white rounded-lg text-sm font-medium hover:bg-primary-hover transition-colors">
-              Save Clinic Info
+              {t.settings.saveClinic}
             </button>
           </form>
         )}
@@ -149,7 +151,7 @@ export default function SettingsPage() {
         {/* Security Tab */}
         {activeTab === 'security' && (
           <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm flex flex-col gap-6">
-            <h3 className="text-lg font-bold text-slate-900 dark:text-white">Security Settings</h3>
+            <h3 className="text-lg font-bold text-slate-900 dark:text-white">{t.settings.securityTitle}</h3>
             <form onSubmit={handleSave} className="flex flex-col gap-4">
               {[
                 { label: 'Current Password', key: 'current' },
@@ -166,17 +168,17 @@ export default function SettingsPage() {
                 </label>
               ))}
               <button type="submit" className="self-start px-6 py-2.5 bg-primary text-white rounded-lg text-sm font-medium hover:bg-primary-hover transition-colors">
-                Update Password
+                {t.settings.updatePassword}
               </button>
             </form>
             <div className="border-t border-slate-200 dark:border-slate-800 pt-5">
-              <h4 className="text-sm font-semibold text-slate-900 dark:text-white mb-3">Two-Factor Authentication</h4>
+              <h4 className="text-sm font-semibold text-slate-900 dark:text-white mb-3">{t.settings.twoFactor}</h4>
               <div className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-800 rounded-lg">
                 <div>
-                  <p className="text-sm font-medium text-slate-900 dark:text-white">Authenticator App</p>
-                  <p className="text-xs text-slate-500 dark:text-slate-400">Not configured</p>
+                  <p className="text-sm font-medium text-slate-900 dark:text-white">{t.settings.authenticatorApp}</p>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">{t.settings.notConfigured}</p>
                 </div>
-                <button className="text-sm text-primary font-medium hover:text-primary-hover">Set up</button>
+                <button className="text-sm text-primary font-medium hover:text-primary-hover">{t.settings.setUp}</button>
               </div>
             </div>
           </div>
@@ -185,13 +187,13 @@ export default function SettingsPage() {
         {/* Notifications Tab */}
         {activeTab === 'notifications' && (
           <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm flex flex-col gap-5">
-            <h3 className="text-lg font-bold text-slate-900 dark:text-white">Notification Preferences</h3>
+            <h3 className="text-lg font-bold text-slate-900 dark:text-white">{t.settings.notifPrefs}</h3>
             {[
-              { label: 'Email Notifications', desc: 'Receive notifications via email', checked: true },
-              { label: 'Appointment Reminders', desc: 'Reminders 24h and 1h before appointments', checked: true },
-              { label: 'Low Stock Alerts', desc: 'Notify when inventory items fall below threshold', checked: true },
-              { label: 'Payment Reminders', desc: 'Auto-send payment reminders to patients', checked: false },
-              { label: 'System Announcements', desc: 'Receive product updates and news', checked: true },
+              { label: t.settings.emailNotifs, desc: t.settings.emailNotifsDesc, checked: true },
+              { label: t.settings.apptReminders, desc: t.settings.apptRemindersDesc, checked: true },
+              { label: t.settings.lowStockAlerts, desc: t.settings.lowStockDesc, checked: true },
+              { label: t.settings.paymentReminders, desc: t.settings.paymentRemindersDesc, checked: false },
+              { label: t.settings.sysAnnouncements, desc: t.settings.sysAnnouncementsDesc, checked: true },
             ].map((setting) => (
               <div key={setting.label} className="flex items-center justify-between py-2 border-b border-slate-100 dark:border-slate-800 last:border-0">
                 <div>

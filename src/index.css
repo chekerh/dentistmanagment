@@ -26,3 +26,66 @@
     user-select: none;
   }
 }
+
+/* ── Landing Page Animations ── */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(36px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeInRight {
+  from { opacity: 0; transform: translateX(40px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-14px); }
+}
+@keyframes orb {
+  0%, 100% { transform: scale(1) translate(0,0); opacity: .18; }
+  50%       { transform: scale(1.12) translate(20px,-20px); opacity: .28; }
+}
+@keyframes gradientShift {
+  0%, 100% { background-position: 0% 50%; }
+  50%       { background-position: 100% 50%; }
+}
+
+/* Hero load animations */
+.anim-fade-up   { animation: fadeInUp 0.7s ease both; }
+.anim-fade-in   { animation: fadeIn 0.6s ease both; }
+.anim-fade-right { animation: fadeInRight 0.8s ease both; }
+.anim-float     { animation: float 5.5s ease-in-out infinite; }
+.anim-orb       { animation: orb 8s ease-in-out infinite; }
+
+/* Stagger delays */
+.delay-1 { animation-delay: 0.1s; }
+.delay-2 { animation-delay: 0.2s; }
+.delay-3 { animation-delay: 0.3s; }
+.delay-4 { animation-delay: 0.4s; }
+.delay-5 { animation-delay: 0.5s; }
+.delay-6 { animation-delay: 0.65s; }
+.delay-7 { animation-delay: 0.8s; }
+
+/* Scroll-reveal (IntersectionObserver toggles .visible) */
+.scroll-reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.65s ease, transform 0.65s ease;
+}
+.scroll-reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Animated gradient text */
+.gradient-text-anim {
+  background: linear-gradient(90deg, #2b7cee, #22d3ee, #2b7cee);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradientShift 4s ease infinite;
+}

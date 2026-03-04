@@ -5,10 +5,12 @@ import Badge, { getStatusBadge } from '../components/Badge';
 import Modal from '../components/Modal';
 import { mockPayments, mockPatients } from '../data/mockData';
 import type { Payment, PaymentMethod } from '../types';
+import { useLang } from '../context/LanguageContext';
 
 const PAYMENT_METHODS: PaymentMethod[] = ['cash', 'card', 'insurance', 'bank-transfer', 'check'];
 
 export default function BillingPage() {
+  const { t } = useLang();
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState<'all' | 'paid' | 'pending' | 'overdue'>('all');
   const [selectedPayment, setSelectedPayment] = useState<Payment | null>(null);
@@ -31,7 +33,7 @@ export default function BillingPage() {
 
   const handleCheckout = (e: React.FormEvent) => {
     e.preventDefault();
-    alert('Payment processed! (Demo)');
+    alert(t.billing.processedDemo);
     setShowCheckoutModal(false);
   };
 
@@ -55,7 +57,7 @@ export default function BillingPage() {
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-5 shadow-sm">
             <div className="flex items-center justify-between">
-              <p className="text-sm text-slate-500 dark:text-slate-400">Total Collected</p>
+              <p className="text-sm text-slate-500 dark:text-slate-400">{t.billing.totalCollected}</p>
               <div className="h-8 w-8 rounded-full bg-green-50 dark:bg-green-900/20 flex items-center justify-center text-green-600">
                 <span className="material-symbols-outlined text-[18px]">check_circle</span>
               </div>
@@ -64,7 +66,7 @@ export default function BillingPage() {
           </div>
           <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-5 shadow-sm">
             <div className="flex items-center justify-between">
-              <p className="text-sm text-slate-500 dark:text-slate-400">Outstanding Balance</p>
+              <p className="text-sm text-slate-500 dark:text-slate-400">{t.billing.outstanding}</p>
               <div className="h-8 w-8 rounded-full bg-yellow-50 dark:bg-yellow-900/20 flex items-center justify-center text-yellow-600">
                 <span className="material-symbols-outlined text-[18px]">schedule</span>
               </div>
@@ -73,7 +75,7 @@ export default function BillingPage() {
           </div>
           <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-5 shadow-sm">
             <div className="flex items-center justify-between">
-              <p className="text-sm text-slate-500 dark:text-slate-400">Overdue</p>
+              <p className="text-sm text-slate-500 dark:text-slate-400">{t.billing.overdue}</p>
               <div className="h-8 w-8 rounded-full bg-red-50 dark:bg-red-900/20 flex items-center justify-center text-red-600">
                 <span className="material-symbols-outlined text-[18px]">warning</span>
               </div>
@@ -124,7 +126,7 @@ export default function BillingPage() {
               </thead>
               <tbody>
                 {filtered.length === 0 ? (
-                  <tr><td colSpan={9} className="text-center py-12 text-slate-400">No records found</td></tr>
+                  <tr><td colSpan={9} className="text-center py-12 text-slate-400">{t.billing.noFound}</td></tr>
                 ) : filtered.map((pay) => (
                   <tr
                     key={pay.id}
@@ -164,7 +166,7 @@ export default function BillingPage() {
       </div>
 
       {/* Invoice Modal */}
-      <Modal isOpen={showCheckoutModal} onClose={() => setShowCheckoutModal(false)} title="New Invoice / Payment" size="md">
+      <Modal isOpen={showCheckoutModal} onClose={() => setShowCheckoutModal(false)} title={t.billing.invoiceTitle} size="md">
         <form onSubmit={handleCheckout} className="flex flex-col gap-4">
           <label className="flex flex-col gap-1.5">
             <span className="text-sm font-medium text-slate-700 dark:text-slate-300">Patient *</span>
@@ -187,7 +189,7 @@ export default function BillingPage() {
               value={checkout.description}
               onChange={(e) => setCheckout(p => ({ ...p, description: e.target.value }))}
               required
-              placeholder="e.g. Dental cleaning & X-ray"
+              placeholder={t.billing.fieldDescPlaceholder}
               className="h-10 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-3 text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/30"
             />
           </label>
@@ -203,7 +205,7 @@ export default function BillingPage() {
               />
             </label>
             <label className="flex flex-col gap-1.5">
-              <span className="text-sm font-medium text-slate-700 dark:text-slate-300">Payment Method</span>
+              <span className="text-sm font-medium text-slate-700 dark:text-slate-300">{t.billing.fieldMethod}</span>
               <select
                 value={checkout.method}
                 onChange={(e) => setCheckout(p => ({ ...p, method: e.target.value as PaymentMethod }))}
@@ -215,12 +217,12 @@ export default function BillingPage() {
           </div>
           {checkout.method === 'insurance' && (
             <label className="flex flex-col gap-1.5">
-              <span className="text-sm font-medium text-slate-700 dark:text-slate-300">Insurance Claim #</span>
+              <span className="text-sm font-medium text-slate-700 dark:text-slate-300">{t.billing.fieldInsurance}</span>
               <input
                 type="text"
                 value={checkout.insuranceClaim}
                 onChange={(e) => setCheckout(p => ({ ...p, insuranceClaim: e.target.value }))}
-                placeholder="INS-2026-XXXX"
+                placeholder={t.billing.fieldInsPlaceholder}
                 className="h-10 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-3 text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/30"
               />
             </label>
@@ -239,7 +241,7 @@ export default function BillingPage() {
       </Modal>
 
       {/* Payment Detail Modal */}
-      <Modal isOpen={!!selectedPayment} onClose={() => setSelectedPayment(null)} title="Payment Details">
+      <Modal isOpen={!!selectedPayment} onClose={() => setSelectedPayment(null)} title={t.billing.detailTitle}>
         {selectedPayment && (
           <div className="flex flex-col gap-4">
             <div className="flex items-center justify-between">
@@ -250,11 +252,11 @@ export default function BillingPage() {
               {[
                 { label: 'Description', value: selectedPayment.description },
                 { label: 'Date', value: selectedPayment.date },
-                { label: 'Total Amount', value: `$${selectedPayment.amount.toFixed(2)}` },
+                { label: t.billing.detailTotal, value: `$${selectedPayment.amount.toFixed(2)}` },
                 { label: 'Paid', value: `$${selectedPayment.paidAmount.toFixed(2)}` },
                 { label: 'Remaining', value: `$${(selectedPayment.amount - selectedPayment.paidAmount).toFixed(2)}` },
                 { label: 'Method', value: selectedPayment.method },
-                ...(selectedPayment.insuranceClaim ? [{ label: 'Insurance Claim', value: selectedPayment.insuranceClaim }] : []),
+                ...(selectedPayment.insuranceClaim ? [{ label: t.billing.detailInsurance, value: selectedPayment.insuranceClaim }] : []),
               ].map(({ label, value }) => (
                 <div key={label}>
                   <p className="text-xs text-slate-500">{label}</p>
@@ -268,7 +270,7 @@ export default function BillingPage() {
                   onClick={() => { alert('Payment processed! (Demo)'); setSelectedPayment(null); }}
                   className="flex-1 py-2.5 rounded-lg bg-green-600 text-white text-sm font-medium hover:bg-green-700 transition-colors"
                 >
-                  Mark as Paid
+                  {t.billing.markAsPaid}
                 </button>
               )}
               <button

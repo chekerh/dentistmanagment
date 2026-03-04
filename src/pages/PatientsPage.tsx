@@ -5,6 +5,7 @@ import Topbar from '../components/Topbar';
 import Badge, { getStatusBadge } from '../components/Badge';
 import Modal from '../components/Modal';
 import { mockPatients } from '../data/mockData';
+import { useLang } from '../context/LanguageContext';
 
 
 function calculateAge(dob: string) {
@@ -13,6 +14,7 @@ function calculateAge(dob: string) {
 }
 
 export default function PatientsPage() {
+  const { t } = useLang();
   const navigate = useNavigate();
   const [search, setSearch] = useState('');
   const [filter, setFilter] = useState<'all' | 'active' | 'inactive'>('all');
@@ -35,7 +37,7 @@ export default function PatientsPage() {
 
   const handleAdd = (e: React.FormEvent) => {
     e.preventDefault();
-    alert('Patient added! (Demo – data not persisted)');
+    alert(t.patients.addedDemo);
     setShowAddModal(false);
     setNewPatient({ firstName: '', lastName: '', email: '', phone: '', dateOfBirth: '', gender: 'female', address: '', bloodType: '', allergies: '', medicalHistory: '', insuranceProvider: '', insuranceNumber: '' });
   };
@@ -90,10 +92,10 @@ export default function PatientsPage() {
         {/* Stats row */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
           {[
-            { label: 'Total Patients', value: mockPatients.length, icon: 'group', color: 'text-blue-600 bg-blue-50 dark:bg-blue-900/20 dark:text-blue-400' },
+            { label: t.patients.totalPatients, value: mockPatients.length, icon: 'group', color: 'text-blue-600 bg-blue-50 dark:bg-blue-900/20 dark:text-blue-400' },
             { label: 'Active', value: mockPatients.filter(p => p.status === 'active').length, icon: 'check_circle', color: 'text-green-600 bg-green-50 dark:bg-green-900/20 dark:text-green-400' },
-            { label: 'With Balance Due', value: mockPatients.filter(p => p.balance > 0).length, icon: 'payments', color: 'text-red-600 bg-red-50 dark:bg-red-900/20 dark:text-red-400' },
-            { label: 'New This Month', value: mockPatients.filter(p => p.registeredDate >= '2026-02-01').length, icon: 'person_add', color: 'text-purple-600 bg-purple-50 dark:bg-purple-900/20 dark:text-purple-400' },
+            { label: t.patients.withBalance, value: mockPatients.filter(p => p.balance > 0).length, icon: 'payments', color: 'text-red-600 bg-red-50 dark:bg-red-900/20 dark:text-red-400' },
+            { label: t.patients.newThisMonth, value: mockPatients.filter(p => p.registeredDate >= '2026-02-01').length, icon: 'person_add', color: 'text-purple-600 bg-purple-50 dark:bg-purple-900/20 dark:text-purple-400' },
           ].map((s) => (
             <div key={s.label} className="flex items-center gap-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-4">
               <div className={`h-9 w-9 rounded-lg flex items-center justify-center flex-shrink-0 ${s.color}`}>
@@ -114,9 +116,9 @@ export default function PatientsPage() {
               <thead>
                 <tr className="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-800">
                   <th className="text-left text-xs font-semibold text-slate-500 dark:text-slate-400 px-5 py-3 uppercase tracking-wide">Patient</th>
-                  <th className="text-left text-xs font-semibold text-slate-500 dark:text-slate-400 px-5 py-3 uppercase tracking-wide">Age / Gender</th>
-                  <th className="text-left text-xs font-semibold text-slate-500 dark:text-slate-400 px-5 py-3 uppercase tracking-wide">Contact</th>
-                  <th className="text-left text-xs font-semibold text-slate-500 dark:text-slate-400 px-5 py-3 uppercase tracking-wide">Last Visit</th>
+                  <th className="text-left text-xs font-semibold text-slate-500 dark:text-slate-400 px-5 py-3 uppercase tracking-wide">{t.patients.tableAgeGender}</th>
+                  <th className="text-left text-xs font-semibold text-slate-500 dark:text-slate-400 px-5 py-3 uppercase tracking-wide">{t.patients.tableContact}</th>
+                  <th className="text-left text-xs font-semibold text-slate-500 dark:text-slate-400 px-5 py-3 uppercase tracking-wide">{t.patients.tableLastVisit}</th>
                   <th className="text-left text-xs font-semibold text-slate-500 dark:text-slate-400 px-5 py-3 uppercase tracking-wide">Balance</th>
                   <th className="text-left text-xs font-semibold text-slate-500 dark:text-slate-400 px-5 py-3 uppercase tracking-wide">Status</th>
                   <th className="px-5 py-3" />
@@ -127,7 +129,7 @@ export default function PatientsPage() {
                   <tr>
                     <td colSpan={7} className="text-center py-12 text-slate-400">
                       <span className="material-symbols-outlined text-4xl block mb-2">search_off</span>
-                      No patients found
+                      {t.patients.noPatientsFound}
                     </td>
                   </tr>
                 ) : filtered.map((patient) => (
@@ -182,7 +184,7 @@ export default function PatientsPage() {
       </div>
 
       {/* Add Patient Modal */}
-      <Modal isOpen={showAddModal} onClose={() => setShowAddModal(false)} title="Add New Patient" size="lg">
+      <Modal isOpen={showAddModal} onClose={() => setShowAddModal(false)} title={t.patients.modalTitle} size="lg">
         <form onSubmit={handleAdd} className="flex flex-col gap-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {[
@@ -221,7 +223,7 @@ export default function PatientsPage() {
             </label>
           </div>
           <label className="flex flex-col gap-1.5">
-            <span className="text-sm font-medium text-slate-700 dark:text-slate-300">Address</span>
+            <span className="text-sm font-medium text-slate-700 dark:text-slate-300">{t.patients.fieldAddress}</span>
             <input
               type="text"
               value={newPatient.address}
@@ -240,7 +242,7 @@ export default function PatientsPage() {
             />
           </label>
           <label className="flex flex-col gap-1.5">
-            <span className="text-sm font-medium text-slate-700 dark:text-slate-300">Medical History</span>
+            <span className="text-sm font-medium text-slate-700 dark:text-slate-300">{t.patients.fieldMedHistory}</span>
             <textarea
               value={newPatient.medicalHistory}
               onChange={(e) => setNewPatient(p => ({ ...p, medicalHistory: e.target.value }))}

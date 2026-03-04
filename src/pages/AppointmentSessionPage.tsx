@@ -4,16 +4,11 @@ import Layout from '../components/Layout';
 import Topbar from '../components/Topbar';
 import Badge, { getStatusBadge } from '../components/Badge';
 import { mockAppointments, mockPatients } from '../data/mockData';
+import { useLang } from '../context/LanguageContext';
 
 type SessionStatus = 'scheduled' | 'in-progress' | 'completed';
 
 const SESSION_STATUSES: SessionStatus[] = ['scheduled', 'in-progress', 'completed'];
-
-const TREATMENT_LABELS: Record<string, string> = {
-  checkup: 'General Checkup', cleaning: 'Dental Cleaning', filling: 'Tooth Filling',
-  'root-canal': 'Root Canal Therapy', extraction: 'Tooth Extraction', crown: 'Crown Placement',
-  whitening: 'Teeth Whitening', orthodontics: 'Orthodontic Adjustment', implant: 'Dental Implant', other: 'Treatment',
-};
 
 interface MaterialItem { id: string; name: string; unit: string; qty: number; icon: string; color: string; }
 
@@ -24,6 +19,7 @@ const DEFAULT_MATERIALS: MaterialItem[] = [
 ];
 
 export default function AppointmentSessionPage() {
+  const { t } = useLang();
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
 
@@ -45,16 +41,16 @@ export default function AppointmentSessionPage() {
         <Topbar title="Session Not Found" />
         <div className="flex flex-col items-center justify-center h-64 gap-4">
           <span className="material-symbols-outlined text-5xl text-slate-300">event_busy</span>
-          <p className="text-slate-500">Appointment not found.</p>
+          <p className="text-slate-500">{t.session.notFound}</p>
           <button onClick={() => navigate('/appointments')} className="text-primary hover:text-primary-hover text-sm font-medium">
-            ← Back to Appointments
+            {t.session.backToAppts}
           </button>
         </div>
       </Layout>
     );
   }
 
-  const treatmentLabel = TREATMENT_LABELS[appointment.treatmentType] ?? appointment.treatmentType;
+  const treatmentLabel = t.treatments[appointment.treatmentType as keyof typeof t.treatments] ?? appointment.treatmentType;
 
   const saveNotes = () => {
     setNotesSaved(true);
@@ -97,7 +93,7 @@ export default function AppointmentSessionPage() {
       <div className="p-6 max-w-[1200px] mx-auto flex flex-col gap-6">
         {/* Breadcrumb */}
         <div className="flex flex-wrap items-center gap-1 text-sm">
-          <Link to="/appointments" className="text-text-secondary hover:text-primary transition-colors">Appointments</Link>
+          <Link to="/appointments" className="text-text-secondary hover:text-primary transition-colors">{t.session.appointmentsLink}</Link>
           <span className="material-symbols-outlined text-[16px] text-text-secondary">chevron_right</span>
           <span className="text-text-secondary">{appointment.dentist}</span>
           <span className="material-symbols-outlined text-[16px] text-text-secondary">chevron_right</span>
@@ -128,13 +124,13 @@ export default function AppointmentSessionPage() {
                       </span>
                     </div>
                     <p className="text-sm text-slate-500 dark:text-text-secondary mt-1">
-                      Treatment: <span className="text-slate-700 dark:text-slate-300 font-medium">{treatmentLabel}</span>
-                      <span className="ml-3">Room: <span className="text-slate-700 dark:text-slate-300 font-medium">{appointment.room}</span></span>
+                      {t.session.treatmentLabel} <span className="text-slate-700 dark:text-slate-300 font-medium">{treatmentLabel}</span>
+                      <span className="ml-3">{t.session.roomLabel} <span className="text-slate-700 dark:text-slate-300 font-medium">{appointment.room}</span></span>
                     </p>
                     {patient.allergies.length > 0 && (
                       <div className="flex items-center gap-2 mt-2">
                         <span className="material-symbols-outlined text-[16px] text-red-500">warning</span>
-                        <span className="text-xs text-red-600 dark:text-red-400 font-medium">Allergies: {patient.allergies.join(', ')}</span>
+                        <span className="text-xs text-red-600 dark:text-red-400 font-medium">{t.session.allergiesLabel} {patient.allergies.join(', ')}</span>
                       </div>
                     )}
                   </div>
@@ -154,7 +150,7 @@ export default function AppointmentSessionPage() {
 
               {/* Status toggle */}
               <div className="mt-6 pt-5 border-t border-slate-200 dark:border-border-dark">
-                <p className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-text-secondary mb-3">Session Status</p>
+                <p className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-text-secondary mb-3">{t.session.sessionStatusLabel}</p>
                 <div className="flex p-1 bg-slate-100 dark:bg-border-dark rounded-lg w-full sm:w-fit">
                   {SESSION_STATUSES.map(s => (
                     <button
@@ -173,7 +169,7 @@ export default function AppointmentSessionPage() {
               </div>
             </div>
 
-            {/* Clinical Notes */}
+            {/* {t.session.clinicalNotes} */}
             <div className="bg-white dark:bg-surface-dark rounded-xl border border-slate-200 dark:border-border-dark p-6 shadow-sm flex flex-col gap-4">
               <div className="flex justify-between items-center">
                 <h3 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
@@ -186,7 +182,7 @@ export default function AppointmentSessionPage() {
                   </span>
                 )}
                 {!notesSaved && notes && (
-                  <span className="text-xs text-slate-400">Unsaved changes</span>
+                  <span className="text-xs text-slate-400">{t.session.unsavedLabel}</span>
                 )}
               </div>
               <div className="relative">
@@ -210,7 +206,7 @@ export default function AppointmentSessionPage() {
                   onClick={saveNotes}
                   className="bg-primary/10 hover:bg-primary/20 text-primary text-sm font-bold py-2 px-4 rounded-lg transition-colors"
                 >
-                  Save Notes
+                  {t.session.saveNotesBtn}
                 </button>
               </div>
             </div>
@@ -218,7 +214,7 @@ export default function AppointmentSessionPage() {
 
           {/* Right column */}
           <div className="lg:col-span-4 flex flex-col gap-6">
-            {/* Materials Used */}
+            {/* {t.session.materialsUsed} */}
             <div className="bg-white dark:bg-surface-dark rounded-xl border border-slate-200 dark:border-border-dark p-6 shadow-sm flex flex-col">
               <div className="flex justify-between items-center mb-4">
                 <h3 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
@@ -238,13 +234,13 @@ export default function AppointmentSessionPage() {
                   <input
                     value={newMat.name}
                     onChange={e => setNewMat(p => ({ ...p, name: e.target.value }))}
-                    placeholder="Item name"
+                    placeholder={t.session.itemNamePh}
                     className="h-8 px-2 rounded border border-slate-200 dark:border-border-dark bg-white dark:bg-surface-dark text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-primary"
                   />
                   <input
                     value={newMat.unit}
                     onChange={e => setNewMat(p => ({ ...p, unit: e.target.value }))}
-                    placeholder="Unit / description"
+                    placeholder={t.session.itemUnitPh}
                     className="h-8 px-2 rounded border border-slate-200 dark:border-border-dark bg-white dark:bg-surface-dark text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-primary"
                   />
                   <div className="flex gap-2">
@@ -280,7 +276,7 @@ export default function AppointmentSessionPage() {
               </div>
 
               <div className="mt-4 pt-4 border-t border-slate-200 dark:border-border-dark flex justify-between text-sm">
-                <span className="text-slate-500 dark:text-text-secondary">Total Items</span>
+                <span className="text-slate-500 dark:text-text-secondary">{t.session.totalItems}</span>
                 <span className="font-bold text-slate-900 dark:text-white">{materials.reduce((s, m) => s + m.qty, 0)}</span>
               </div>
             </div>
@@ -289,26 +285,26 @@ export default function AppointmentSessionPage() {
             <div className="rounded-xl bg-gradient-to-br from-primary/10 to-transparent dark:from-primary/20 p-6 border border-primary/20 shadow-sm flex flex-col gap-4">
               <h3 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
                 <span className="material-symbols-outlined text-primary">event_upcoming</span>
-                Next Appointment
+                {t.session.nextAppt}
               </h3>
               <p className="text-sm text-slate-600 dark:text-slate-300">
-                Dr. recommends a follow-up visit in{' '}
-                <span className="font-bold text-primary">2 weeks</span> for check-up.
+                {t.session.followUpDesc}{' '}
+                <span className="font-bold text-primary">{t.session.twoWeeks}</span> {t.session.forCheckup}
               </p>
               <div className="flex flex-col gap-2 mt-2">
                 <Link
                   to="/appointments"
                   className="flex w-full items-center justify-center rounded-lg h-10 px-4 bg-primary hover:bg-primary-hover text-white text-sm font-bold shadow-md shadow-primary/20 transition-all"
                 >
-                  Schedule Follow-up
+                  {t.session.scheduleFollowUp}
                 </Link>
                 <button className="flex w-full items-center justify-center rounded-lg h-10 px-4 bg-white dark:bg-background-dark hover:bg-slate-50 dark:hover:bg-surface-dark text-slate-700 dark:text-white border border-slate-200 dark:border-border-dark text-sm font-bold transition-all">
-                  Print Prescription
+                  {t.session.printPrescription}
                 </button>
               </div>
             </div>
 
-            {/* Session Summary */}
+            {/* {t.session.sessionSummary} */}
             <div className="bg-white dark:bg-surface-dark rounded-xl border border-slate-200 dark:border-border-dark p-5 shadow-sm">
               <h3 className="text-sm font-bold text-slate-900 dark:text-white mb-3">Session Summary</h3>
               <div className="flex flex-col gap-2 text-sm">
