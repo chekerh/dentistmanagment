@@ -85,7 +85,7 @@ export default function AppointmentsPage() {
         }
       />
 
-      <div className="p-6 flex flex-col gap-6">
+      <div className="p-4 md:p-6 flex flex-col gap-6">
         {/* Stats */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           {[

@@ -52,7 +52,7 @@ export default function BillingPage() {
         }
       />
 
-      <div className="p-6 flex flex-col gap-6">
+      <div className="p-4 md:p-6 flex flex-col gap-6">
         {/* Stats */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-5 shadow-sm">

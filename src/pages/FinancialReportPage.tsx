@@ -51,7 +51,7 @@ export default function FinancialReportPage() {
         }
       />
 
-      <div className="p-6 max-w-[1200px] mx-auto flex flex-col gap-8">
+      <div className="p-4 md:p-6 max-w-[1200px] mx-auto flex flex-col gap-8">
         {/* Title */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 pb-4 border-b border-slate-200 dark:border-border-dark">
           <div>
@@ -167,7 +167,7 @@ export default function FinancialReportPage() {
 
         {/* Transactions Table */}
         <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
-          <div className="p-6 border-b border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+          <div className="p-4 md:p-6 border-b border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
             <h3 className="text-lg font-bold text-slate-900 dark:text-white">{t.financialReport.recentTransactions}</h3>
             <div className="flex items-center gap-2">
               <span className="material-symbols-outlined text-slate-400 text-[20px]">filter_list</span>
