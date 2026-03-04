@@ -2,6 +2,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import Layout from '../components/Layout';
 import Topbar from '../components/Topbar';
 import Badge, { getStatusBadge } from '../components/Badge';
+import DentalChart from '../components/DentalChart';
 import { mockPatients, mockAppointments, mockTreatments, mockPayments } from '../data/mockData';
 import { useLang } from '../context/LanguageContext';
 
@@ -90,6 +91,131 @@ export default function PatientDetailPage() {
                 ${patient.balance.toFixed(2)}
               </p>
               <p className="text-xs text-slate-500">{t.patientDetail.balanceDue}</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Dental Chart Section */}
+        <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+          <div className="xl:col-span-2">
+            <DentalChart
+              toothData={[
+                { number: 14, status: 'cavity', notes: 'Decay (MOD)' },
+                { number: 16, status: 'treated', notes: 'Root canal 2023' },
+                { number: 26, status: 'crown', notes: 'Porcelain crown' },
+                { number: 36, status: 'missing' },
+              ]}
+            />
+          </div>
+          
+          <div className="flex flex-col gap-6">
+            {/* Quick Actions */}
+            <div className="bg-surface-dark border border-border-dark rounded-xl p-5">
+              <h3 className="text-sm font-semibold text-white uppercase tracking-wide mb-4">Quick Actions</h3>
+              <div className="grid grid-cols-2 gap-3">
+                <button className="flex flex-col items-center justify-center gap-2 p-4 rounded-lg bg-background-dark hover:bg-slate-800 border border-border-dark transition-colors group">
+                  <span className="material-symbols-outlined text-2xl text-slate-400 group-hover:text-primary transition-colors">grid_on</span>
+                  <span className="text-xs font-medium text-slate-300">Cavity</span>
+                </button>
+                <button className="flex flex-col items-center justify-center gap-2 p-4 rounded-lg bg-background-dark hover:bg-slate-800 border border-border-dark transition-colors group">
+                  <span className="material-symbols-outlined text-2xl text-slate-400 group-hover:text-primary transition-colors">stars</span>
+                  <span className="text-xs font-medium text-slate-300">Crown</span>
+                </button>
+                <button className="flex flex-col items-center justify-center gap-2 p-4 rounded-lg bg-background-dark hover:bg-slate-800 border border-border-dark transition-colors group">
+                  <span className="material-symbols-outlined text-2xl text-slate-400 group-hover:text-primary transition-colors">close</span>
+                  <span className="text-xs font-medium text-slate-300">Extract</span>
+                </button>
+                <button className="flex flex-col items-center justify-center gap-2 p-4 rounded-lg bg-background-dark hover:bg-slate-800 border border-border-dark transition-colors group">
+                  <span className="material-symbols-outlined text-2xl text-slate-400 group-hover:text-primary transition-colors">edit_note</span>
+                  <span className="text-xs font-medium text-slate-300">Note</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Current Status */}
+            <div className="bg-surface-dark border border-border-dark rounded-xl p-5">
+              <h3 className="text-sm font-semibold text-white uppercase tracking-wide mb-4">Current Status</h3>
+              <div className="space-y-3">
+                <div>
+                  <p className="text-xs text-slate-400">Condition</p>
+                  <p className="text-sm font-semibold text-red-400 mt-1">Decay (MOD)</p>
+                </div>
+                <div>
+                  <p className="text-xs text-slate-400">Last Treatment</p>
+                  <p className="text-sm font-semibold text-white mt-1">None</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* X-Rays & Media and Prescriptions Row */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* X-Rays & Media */}
+          <div className="bg-surface-dark border border-border-dark rounded-xl p-5">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-sm font-semibold text-white uppercase tracking-wide">X-Rays & Media</h3>
+              <button className="p-2 rounded-lg bg-background-dark hover:bg-slate-800 border border-border-dark transition-colors">
+                <span className="material-symbols-outlined text-[20px] text-slate-300">photo_camera</span>
+              </button>
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div className="relative group cursor-pointer rounded-lg overflow-hidden bg-slate-800 border border-border-dark">
+                <div className="aspect-square flex items-center justify-center">
+                  <span className="material-symbols-outlined text-4xl text-slate-600">image</span>
+                </div>
+                <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                  <span className="text-xs text-white font-medium">Panoramic X-ray</span>
+                </div>
+                <div className="absolute bottom-2 right-2 bg-black/80 px-2 py-0.5 rounded text-[10px] text-white">
+                  Jan 2025
+                </div>
+              </div>
+              <div className="relative group cursor-pointer rounded-lg overflow-hidden bg-slate-800 border border-border-dark">
+                <div className="aspect-square flex items-center justify-center">
+                  <span className="material-symbols-outlined text-4xl text-slate-600">image</span>
+                </div>
+                <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                  <span className="text-xs text-white font-medium">Periapical - Jan 2023</span>
+                </div>
+                <div className="absolute bottom-2 right-2 bg-black/80 px-2 py-0.5 rounded text-[10px] text-white">
+                  Periapical
+                </div>
+              </div>
+              <button className="aspect-square rounded-lg border-2 border-dashed border-border-dark hover:border-primary flex flex-col items-center justify-center gap-2 transition-colors group">
+                <span className="material-symbols-outlined text-2xl text-slate-600 group-hover:text-primary">upload</span>
+                <span className="text-xs text-slate-500 group-hover:text-primary">Upload New</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Active Prescriptions */}
+          <div className="bg-surface-dark border border-border-dark rounded-xl p-5">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-sm font-semibold text-white uppercase tracking-wide">Active Prescriptions</h3>
+              <button className="p-2 rounded-lg bg-background-dark hover:bg-slate-800 border border-border-dark transition-colors">
+                <span className="material-symbols-outlined text-[20px] text-slate-300">add</span>
+              </button>
+            </div>
+            <div className="space-y-3">
+              <div className="flex items-start gap-3 p-3 rounded-lg bg-background-dark border border-border-dark">
+                <div className="p-2 rounded-lg bg-primary/10">
+                  <span className="material-symbols-outlined text-primary text-[20px]">medication</span>
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-semibold text-white">Amoxicillin 500mg</p>
+                  <p className="text-xs text-slate-400 mt-0.5">1 tablet every 8 hours for 7 days</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3 p-3 rounded-lg bg-background-dark border border-border-dark">
+                <div className="p-2 rounded-lg bg-primary/10">
+                  <span className="material-symbols-outlined text-primary text-[20px]">medication</span>
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-semibold text-white">Chlorhexidine Rinse</p>
+                  <p className="text-xs text-slate-400 mt-0.5">Twice daily for 14 days</p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
