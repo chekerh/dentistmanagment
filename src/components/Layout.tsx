@@ -1,4 +1,5 @@
 import Sidebar from './Sidebar';
+import { Chatbot } from './Chatbot/Chatbot';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -11,6 +12,7 @@ export default function Layout({ children }: LayoutProps) {
       <main className="flex-1 overflow-y-auto">
         {children}
       </main>
+      <Chatbot />
     </div>
   );
 }
