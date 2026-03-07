@@ -6,13 +6,13 @@ DentoFlow is a React 18 + TypeScript dental practice management system with hybr
 ## Architecture
 
 ### Context System (React Context API)
-- **AuthContext** ([src/context/AuthContext.tsx](../src/context/AuthContext.tsx)): Mock authentication with localStorage persistence. Credentials: `admin`/`admin` or `patient`/`patient`.
-- **LanguageContext** ([src/context/LanguageContext.tsx](../src/context/LanguageContext.tsx)): Provides `useLang()` hook returning `{ lang, t, setLang, isRTL }`. Auto-loads Cairo font for Arabic.
+- **AuthContext** ([src/context/AuthContext.tsx](src/context/AuthContext.tsx)): Mock authentication with localStorage persistence. Credentials: `admin`/`admin` or `patient`/`patient`.
+- **LanguageContext** ([src/context/LanguageContext.tsx](src/context/LanguageContext.tsx)): Provides `useLang()` hook returning `{ lang, t, setLang, isRTL }`. Auto-loads Cairo font for Arabic.
 
 ### Data Layer
-All data lives in **[src/data/mockData.ts](../src/data/mockData.ts)** — exported arrays of `mockPatients`, `mockAppointments`, `mockInventory`, `mockPayments`, `mockNotifications`. **Never hardcode patient names like "Sarra Jenkins"** — always use real data from mockData.
+All data lives in **[src/data/mockData.ts](src/data/mockData.ts)** — exported arrays of `mockPatients`, `mockAppointments`, `mockInventory`, `mockPayments`, `mockNotifications`. **Never hardcode patient names like "Sarra Jenkins"** — always use real data from mockData.
 
-### Hybrid AI Architecture ([src/services/ai/](../src/services/ai/))
+### Hybrid AI Architecture ([src/services/ai/](src/services/ai/))
 **Local-first approach with cloud fallback:**
 1. **nlpService.ts** (compromise.js) — tries local NLP first (70% confidence threshold)
 2. **geminiService.ts** — fallback to Google Gemini Pro if local confidence < 70%
@@ -39,7 +39,7 @@ Key patterns:
   - +0.15 for each key parameter extracted
   - Threshold: ≥0.7 → local response, <0.7 → Gemini fallback
 
-**Custom Handlers** ([nlpService.ts](../src/services/ai/nlpService.ts)):
+**Custom Handlers** ([nlpService.ts](src/services/ai/nlpService.ts)):
 ```typescript
 // Example: Schedule Appointment
 handleScheduleAppointment(doc) {
@@ -74,12 +74,12 @@ handleScheduleAppointment(doc) {
 - Typos/misspellings: "Shdule jon do 4 cleening"
 - Low confidence: When local AI can't extract enough info
 
-### i18n System ([src/i18n/translations.ts](../src/i18n/translations.ts))
+### i18n System ([src/i18n/translations.ts](src/i18n/translations.ts))
 Centralized translations object with EN/FR/AR. Structure: `{ brand, nav, pages, common, status, dashboard, patients, appointments, ... }`. Always add new UI strings to all 3 languages simultaneously to avoid missing translations.
 
 **Critical:** Use `useLang()` hook from LanguageContext, NOT `useLanguage` (old name).
 
-### Routing & Auth Guards ([src/App.tsx](../src/App.tsx))
+### Routing & Auth Guards ([src/App.tsx](src/App.tsx))
 - `RequireAuth` HOC checks user role before rendering
 - Admin routes: `/dashboard`, `/patients`, `/appointments`, `/inventory`, `/reports`, `/billing`, `/notifications`, `/settings`
 - Patient route: `/portal`
@@ -87,10 +87,10 @@ Centralized translations object with EN/FR/AR. Structure: `{ brand, nav, pages, 
 - Redirects: Unauthenticated → `/login`, wrong role → appropriate dashboard
 
 ### Component Structure
-- **[src/components/](../src/components/)** — Shared UI (Layout, Sidebar, Topbar, Modal, Badge, StatCard, DentalChart)
-- **[src/components/Chatbot/](../src/components/Chatbot/)** — 12 chatbot components (ChatWindow, ChatMessage, ChatInput, QuickActions, etc.)
-- **[src/pages/](../src/pages/)** — Full page components for each route
-- **[src/types/index.ts](../src/types/index.ts)** — All TypeScript interfaces (`Patient`, `Appointment`, `InventoryItem`, `Payment`, etc.)
+- **[src/components/](src/components/)** — Shared UI (Layout, Sidebar, Topbar, Modal, Badge, StatCard, DentalChart)
+- **[src/components/Chatbot/](src/components/Chatbot/)** — 12 chatbot components (ChatWindow, ChatMessage, ChatInput, QuickActions, etc.)
+- **[src/pages/](src/pages/)** — Full page components for each route
+- **[src/types/index.ts](src/types/index.ts)** — All TypeScript interfaces (`Patient`, `Appointment`, `InventoryItem`, `Payment`, etc.)
 
 ## Developer Workflows
 
@@ -122,7 +122,7 @@ Recent commits follow semantic prefixes:
 ## Build & Performance
 
 ### Bundle Optimization (Vite Code Splitting)
-**Configuration** ([vite.config.ts](../vite.config.ts)):
+**Configuration** ([vite.config.ts](vite.config.ts)):
 - All 14 pages lazy-loaded with `React.lazy()` and `<Suspense>`
 - Manual chunks for vendor code separation:
   - `react-vendor`: React, React-DOM, React-Router-DOM (~178 kB)
@@ -196,20 +196,20 @@ Custom Tailwind theme with dark colors:
 All pages use `bg-background-dark` by default.
 
 ### TypeScript Strictness
-- No `any` types — use proper interfaces from [src/types/index.ts](../src/types/index.ts)
+- No `any` types — use proper interfaces from [src/types/index.ts](src/types/index.ts)
 - Use `// @ts-ignore` sparingly (currently used for compromise plugin types due to missing declarations)
-- Breaking circular imports: Create separate `types.ts` files (see [src/services/ai/types.ts](../src/services/ai/types.ts))
+- Breaking circular imports: Create separate `types.ts` files (see [src/services/ai/types.ts](src/services/ai/types.ts))
 
 ## Common Tasks
 
 ### Adding a New Patient Field
-1. Update `Patient` interface in [src/types/index.ts](../src/types/index.ts)
-2. Add data to `mockPatients` in [src/data/mockData.ts](../src/data/mockData.ts)
-3. Add translations to `patients` section in [src/i18n/translations.ts](../src/i18n/translations.ts) (all 3 languages)
-4. Update patient detail UI in [src/pages/PatientDetailPage.tsx](../src/pages/PatientDetailPage.tsx)
+1. Update `Patient` interface in [src/types/index.ts](src/types/index.ts)
+2. Add data to `mockPatients` in [src/data/mockData.ts](src/data/mockData.ts)
+3. Add translations to `patients` section in [src/i18n/translations.ts](src/i18n/translations.ts) (all 3 languages)
+4. Update patient detail UI in [src/pages/PatientDetailPage.tsx](src/pages/PatientDetailPage.tsx)
 
 ### Adding a New AI Intent
-1. Add pattern to `nlpService.parseIntent()` in [src/services/ai/nlpService.ts](../src/services/ai/nlpService.ts)
+1. Add pattern to `nlpService.parseIntent()` in [src/services/ai/nlpService.ts](src/services/ai/nlpService.ts)
    - Example: `{ regex: /new|pattern|keywords/i, handler: this.handleNewIntent }`
 2. Create handler method following pattern:
    ```typescript
@@ -223,9 +223,9 @@ All pages use `bg-background-dark` by default.
      return { action: 'create', entity: 'something', params, confidence };
    }
    ```
-3. Add response generation logic to `aiService.generateResponseMessage()` in [src/services/ai/aiService.ts](../src/services/ai/aiService.ts)
-4. Update Gemini system prompt in [src/services/ai/geminiService.ts](../src/services/ai/geminiService.ts) with new examples
-5. Add chatbot translations for new commands in [src/i18n/translations.ts](../src/i18n/translations.ts) (`chatbot` section)
+3. Add response generation logic to `aiService.generateResponseMessage()` in [src/services/ai/aiService.ts](src/services/ai/aiService.ts)
+4. Update Gemini system prompt in [src/services/ai/geminiService.ts](src/services/ai/geminiService.ts) with new examples
+5. Add chatbot translations for new commands in [src/i18n/translations.ts](src/i18n/translations.ts) (`chatbot` section)
 
 **Testing AI Intents:**
 - Test in chatbot with variations: "schedule appointment", "book appt", "rendez-vous"
@@ -234,9 +234,9 @@ All pages use `bg-background-dark` by default.
 - Test multilingual keywords (EN/FR/AR)
 
 ### Adding a New Page
-1. Create page component in [src/pages/](../src/pages/)
-2. Add route in [src/App.tsx](../src/App.tsx) `<AppRoutes>` with appropriate `RequireAuth` wrapper
-3. Add navigation entry in Sidebar ([src/components/Sidebar.tsx](../src/components/Sidebar.tsx))
+1. Create page component in [src/pages/](src/pages/)
+2. Add route in [src/App.tsx](src/App.tsx) `<AppRoutes>` with appropriate `RequireAuth` wrapper
+3. Add navigation entry in Sidebar ([src/components/Sidebar.tsx](src/components/Sidebar.tsx))
 4. Add translations for page title and nav label
 
 ## Known Issues & Gotchas
