@@ -23,6 +23,57 @@ Key patterns:
 - Conversation history: Array of `{ role: 'user' | 'bot', content: string }` for context-aware responses
 - No API key needed for local AI; Gemini requires `VITE_GEMINI_API_KEY` in `.env`
 
+#### Local AI Implementation (compromise.js)
+**What it is:** Rule-based NLP library (~200KB), NOT a machine learning model. Zero training required.
+
+**How it works:**
+- **Pattern Matching**: Regex patterns match keywords (`schedule|planifier|جدولة`)
+- **Entity Extraction**: Built-in grammar parsing recognizes:
+  - People names: `doc.people().out('array')` → `["Sarah Johnson"]`
+  - Dates: `doc.dates().json()` → `[{text: "tomorrow"}]`
+  - Times: Regex patterns like `/(\d{1,2}):?(\d{2})?\s*(am|pm)?/i`
+  - Numbers: For ages, quantities
+- **Multilingual**: Keyword arrays support EN/FR/AR simultaneously
+- **Confidence Scoring**: 
+  - Base confidence (0.6) for pattern match
+  - +0.15 for each key parameter extracted
+  - Threshold: ≥0.7 → local response, <0.7 → Gemini fallback
+
+**Custom Handlers** ([nlpService.ts](../src/services/ai/nlpService.ts)):
+```typescript
+// Example: Schedule Appointment
+handleScheduleAppointment(doc) {
+  const params = {};
+  params.patientName = doc.people().out('array')[0];
+  params.treatment = matchKeywords(text, treatmentKeywords);
+  params.date = doc.dates().json()[0]?.text;
+  
+  // Calculate confidence based on extracted params
+  let confidence = 0.6; // base
+  if (params.patientName) confidence += 0.15;
+  if (params.treatment) confidence += 0.15;
+  if (params.date || params.time) confidence += 0.1;
+  
+  return { action: 'create', entity: 'appointment', params, confidence };
+}
+```
+
+**Why No Training Required:**
+- Uses linguistic rules, not learned patterns
+- Grammar analysis (English structure understanding)
+- Keyword matching for domain-specific tasks
+- Predictable: same input = same output
+- Fast: ~10-20ms vs 1-2s for Gemini
+- Private: all processing happens locally
+- Free: no API costs
+- Offline: works without internet
+
+**When Gemini Activates:**
+- Complex queries: "What's the best time considering Sarah's work schedule?"
+- Ambiguous requests: "Help with that thing we discussed"
+- Typos/misspellings: "Shdule jon do 4 cleening"
+- Low confidence: When local AI can't extract enough info
+
 ### i18n System ([src/i18n/translations.ts](../src/i18n/translations.ts))
 Centralized translations object with EN/FR/AR. Structure: `{ brand, nav, pages, common, status, dashboard, patients, appointments, ... }`. Always add new UI strings to all 3 languages simultaneously to avoid missing translations.
 
@@ -61,10 +112,46 @@ Get key: https://makersuite.google.com/app/apikey
 ### Git Conventions
 Recent commits follow semantic prefixes:
 - `feat:` — New features (AI integration, mobile responsiveness)
+- `perf:` — Performance improvements (code splitting, lazy loading)
 - `build:` — Dependencies changes
 - `i18n:` — Translation updates
 - `docs:` — Documentation only
+- `chore:` — Maintenance (gitignore, cleanup)
 - Use detailed multi-line commit messages with `-m` flags for context
+
+## Build & Performance
+
+### Bundle Optimization (Vite Code Splitting)
+**Configuration** ([vite.config.ts](../vite.config.ts)):
+- All 14 pages lazy-loaded with `React.lazy()` and `<Suspense>`
+- Manual chunks for vendor code separation:
+  - `react-vendor`: React, React-DOM, React-Router-DOM (~178 kB)
+  - `charts`: Recharts visualization library (~386 kB)
+  - `ai`: compromise.js NLP libraries (~499 kB)
+  - `date-utils`: date-fns utilities (~20 kB)
+- Chunk size warning limit: 600 kB
+- Result: Largest chunk reduced from 1,396 kB → 499 kB (64% reduction)
+- Total gzipped: ~422 kB
+
+**LoadingFallback Pattern:**
+```typescript
+function LoadingFallback() {
+  return (
+    <div className="min-h-screen bg-background-dark flex items-center justify-center">
+      <div className="flex flex-col items-center gap-4">
+        <div className="h-10 w-10 rounded-full border-4 border-primary border-t-transparent animate-spin" />
+        <p className="text-text-secondary text-sm">Loading…</p>
+      </div>
+    </div>
+  );
+}
+```
+
+**Why This Works:**
+- Initial bundle only loads essential code + current route
+- Additional pages load on-demand during navigation
+- Vendor code cached separately (better caching strategy)
+- Faster initial page load (~40% improvement)
 
 ## Critical Patterns
 
@@ -123,9 +210,28 @@ All pages use `bg-background-dark` by default.
 
 ### Adding a New AI Intent
 1. Add pattern to `nlpService.parseIntent()` in [src/services/ai/nlpService.ts](../src/services/ai/nlpService.ts)
-2. Add response generation logic to `aiService.generateResponseMessage()` in [src/services/ai/aiService.ts](../src/services/ai/aiService.ts)
-3. Update Gemini system prompt in [src/services/ai/geminiService.ts](../src/services/ai/geminiService.ts) with new examples
-4. Add chatbot translations for new commands
+   - Example: `{ regex: /new|pattern|keywords/i, handler: this.handleNewIntent }`
+2. Create handler method following pattern:
+   ```typescript
+   private handleNewIntent(doc: any): Partial<Intent> {
+     const params = {};
+     // Extract entities using compromise
+     params.something = doc.people().out('array')[0];
+     // Calculate confidence
+     let confidence = 0.6;
+     if (params.something) confidence += 0.15;
+     return { action: 'create', entity: 'something', params, confidence };
+   }
+   ```
+3. Add response generation logic to `aiService.generateResponseMessage()` in [src/services/ai/aiService.ts](../src/services/ai/aiService.ts)
+4. Update Gemini system prompt in [src/services/ai/geminiService.ts](../src/services/ai/geminiService.ts) with new examples
+5. Add chatbot translations for new commands in [src/i18n/translations.ts](../src/i18n/translations.ts) (`chatbot` section)
+
+**Testing AI Intents:**
+- Test in chatbot with variations: "schedule appointment", "book appt", "rendez-vous"
+- Check AI badge shows "LOCAL" for high confidence (>70%)
+- Verify Gemini fallback works for ambiguous queries
+- Test multilingual keywords (EN/FR/AR)
 
 ### Adding a New Page
 1. Create page component in [src/pages/](../src/pages/)
