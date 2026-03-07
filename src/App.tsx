@@ -45,8 +45,6 @@ function RequireAuth({ children, role }: { children: JSX.Element; role?: 'admin'
 // ─── App Shell ───────────────────────────────────────────────────────────────
 
 function AppRoutes() {
-  const { user } = useAuth();
-
   return (
     <Routes>
       {/* Public */}

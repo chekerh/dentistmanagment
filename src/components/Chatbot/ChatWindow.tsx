@@ -6,7 +6,7 @@ import { ConfirmationModal, ConfirmationData } from './ConfirmationModal';
 import { Message } from './ChatMessage';
 import { useLang } from '../../context/LanguageContext';
 import { mockPatients } from '../../data/mockData';
-import { format, addDays } from 'date-fns';
+import { format } from 'date-fns';
 import { fr, ar } from 'date-fns/locale';
 import { aiService } from '../../services/ai/aiService';
 
@@ -34,8 +34,8 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({
   const [isLoading, setIsLoading] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [confirmationData, setConfirmationData] = useState<ConfirmationData | null>(null);
-  const [pendingAppointment, setPendingAppointment] = useState<PendingAppointment>({});
-  const [conversationState, setConversationState] = useState<'idle' | 'awaiting-time' | 'awaiting-doctor' | 'awaiting-treatment'>('idle');
+  const [_pendingAppointment, setPendingAppointment] = useState<PendingAppointment>({});
+  const [_conversationState, setConversationState] = useState<'idle' | 'awaiting-time' | 'awaiting-doctor' | 'awaiting-treatment'>('idle');
   const [conversationHistory, setConversationHistory] = useState<Array<{ role: 'user' | 'bot'; content: string }>>([]);
 
   const getDateLocale = () => {
@@ -46,6 +46,7 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({
     }
   };
 
+  /* Commented out - reserved for future multi-step conversation feature
   const parseAppointmentRequest = (input: string) => {
     const lowerInput = input.toLowerCase();
     
@@ -97,6 +98,7 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({
       dateStr,
     };
   };
+  */
 
   const handleSendMessage = async (content: string) => {
     // Add user message
@@ -306,6 +308,7 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({
     setMessages((prev) => [...prev, botResponse]);
   };
 
+  /* Commented out - reserved for future stateful conversation flows
   // Handle conversation state responses
   const handleStateResponse = async (content: string) => {
     if (conversationState === 'awaiting-treatment') {
@@ -368,6 +371,7 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({
 
     return false;
   };
+  */
 
   const showAppointmentPreview = (appointment: PendingAppointment) => {
     const botResponse: Message = {
