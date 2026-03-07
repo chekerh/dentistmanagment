@@ -111,38 +111,38 @@ export default function PatientDetailPage() {
           <div className="flex flex-col gap-6">
             {/* Quick Actions */}
             <div className="bg-surface-dark border border-border-dark rounded-xl p-5">
-              <h3 className="text-sm font-semibold text-white uppercase tracking-wide mb-4">Quick Actions</h3>
+              <h3 className="text-sm font-semibold text-white uppercase tracking-wide mb-4">{t.patientDetail.quickActions}</h3>
               <div className="grid grid-cols-2 gap-3">
                 <button className="flex flex-col items-center justify-center gap-2 p-4 rounded-lg bg-background-dark hover:bg-slate-800 border border-border-dark transition-colors group">
                   <span className="material-symbols-outlined text-2xl text-slate-400 group-hover:text-primary transition-colors">grid_on</span>
-                  <span className="text-xs font-medium text-slate-300">Cavity</span>
+                  <span className="text-xs font-medium text-slate-300">{t.patientDetail.cavity}</span>
                 </button>
                 <button className="flex flex-col items-center justify-center gap-2 p-4 rounded-lg bg-background-dark hover:bg-slate-800 border border-border-dark transition-colors group">
                   <span className="material-symbols-outlined text-2xl text-slate-400 group-hover:text-primary transition-colors">stars</span>
-                  <span className="text-xs font-medium text-slate-300">Crown</span>
+                  <span className="text-xs font-medium text-slate-300">{t.patientDetail.crown}</span>
                 </button>
                 <button className="flex flex-col items-center justify-center gap-2 p-4 rounded-lg bg-background-dark hover:bg-slate-800 border border-border-dark transition-colors group">
                   <span className="material-symbols-outlined text-2xl text-slate-400 group-hover:text-primary transition-colors">close</span>
-                  <span className="text-xs font-medium text-slate-300">Extract</span>
+                  <span className="text-xs font-medium text-slate-300">{t.patientDetail.extract}</span>
                 </button>
                 <button className="flex flex-col items-center justify-center gap-2 p-4 rounded-lg bg-background-dark hover:bg-slate-800 border border-border-dark transition-colors group">
                   <span className="material-symbols-outlined text-2xl text-slate-400 group-hover:text-primary transition-colors">edit_note</span>
-                  <span className="text-xs font-medium text-slate-300">Note</span>
+                  <span className="text-xs font-medium text-slate-300">{t.patientDetail.note}</span>
                 </button>
               </div>
             </div>
 
             {/* Current Status */}
             <div className="bg-surface-dark border border-border-dark rounded-xl p-5">
-              <h3 className="text-sm font-semibold text-white uppercase tracking-wide mb-4">Current Status</h3>
+              <h3 className="text-sm font-semibold text-white uppercase tracking-wide mb-4">{t.patientDetail.currentStatus}</h3>
               <div className="space-y-3">
                 <div>
-                  <p className="text-xs text-slate-400">Condition</p>
+                  <p className="text-xs text-slate-400">{t.patientDetail.condition}</p>
                   <p className="text-sm font-semibold text-red-400 mt-1">Decay (MOD)</p>
                 </div>
                 <div>
-                  <p className="text-xs text-slate-400">Last Treatment</p>
-                  <p className="text-sm font-semibold text-white mt-1">None</p>
+                  <p className="text-xs text-slate-400">{t.patientDetail.lastTreatment}</p>
+                  <p className="text-sm font-semibold text-white mt-1">{t.patientDetail.none}</p>
                 </div>
               </div>
             </div>
@@ -154,7 +154,7 @@ export default function PatientDetailPage() {
           {/* X-Rays & Media */}
           <div className="bg-surface-dark border border-border-dark rounded-xl p-5">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-sm font-semibold text-white uppercase tracking-wide">X-Rays & Media</h3>
+              <h3 className="text-sm font-semibold text-white uppercase tracking-wide">{t.patientDetail.xraysMedia}</h3>
               <button className="p-2 rounded-lg bg-background-dark hover:bg-slate-800 border border-border-dark transition-colors">
                 <span className="material-symbols-outlined text-[20px] text-slate-300">photo_camera</span>
               </button>
@@ -165,7 +165,7 @@ export default function PatientDetailPage() {
                   <span className="material-symbols-outlined text-4xl text-slate-600">image</span>
                 </div>
                 <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                  <span className="text-xs text-white font-medium">Panoramic X-ray</span>
+                  <span className="text-xs text-white font-medium">{t.patientDetail.panoramicXray}</span>
                 </div>
                 <div className="absolute bottom-2 right-2 bg-black/80 px-2 py-0.5 rounded text-[10px] text-white">
                   Jan 2025
@@ -176,15 +176,15 @@ export default function PatientDetailPage() {
                   <span className="material-symbols-outlined text-4xl text-slate-600">image</span>
                 </div>
                 <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                  <span className="text-xs text-white font-medium">Periapical - Jan 2023</span>
+                  <span className="text-xs text-white font-medium">{t.patientDetail.periapical} - Jan 2023</span>
                 </div>
                 <div className="absolute bottom-2 right-2 bg-black/80 px-2 py-0.5 rounded text-[10px] text-white">
-                  Periapical
+                  {t.patientDetail.periapical}
                 </div>
               </div>
               <button className="aspect-square rounded-lg border-2 border-dashed border-border-dark hover:border-primary flex flex-col items-center justify-center gap-2 transition-colors group">
                 <span className="material-symbols-outlined text-2xl text-slate-600 group-hover:text-primary">upload</span>
-                <span className="text-xs text-slate-500 group-hover:text-primary">Upload New</span>
+                <span className="text-xs text-slate-500 group-hover:text-primary">{t.patientDetail.uploadNew}</span>
               </button>
             </div>
           </div>
@@ -192,7 +192,7 @@ export default function PatientDetailPage() {
           {/* Active Prescriptions */}
           <div className="bg-surface-dark border border-border-dark rounded-xl p-5">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-sm font-semibold text-white uppercase tracking-wide">Active Prescriptions</h3>
+              <h3 className="text-sm font-semibold text-white uppercase tracking-wide">{t.patientDetail.activePrescriptions}</h3>
               <button className="p-2 rounded-lg bg-background-dark hover:bg-slate-800 border border-border-dark transition-colors">
                 <span className="material-symbols-outlined text-[20px] text-slate-300">add</span>
               </button>
@@ -213,7 +213,7 @@ export default function PatientDetailPage() {
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-semibold text-white">Chlorhexidine Rinse</p>
-                  <p className="text-xs text-slate-400 mt-0.5">Twice daily for 14 days</p>
+                  <p className="text-xs text-slate-400 mt-0.5">{t.patientDetail.twiceDaily}</p>
                 </div>
               </div>
             </div>

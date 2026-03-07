@@ -264,6 +264,10 @@ const en = {
     paymentHistory: 'Payment History', noPayments: 'No payments',
     appointmentsCount: 'Appointments', treatmentsCount: 'Treatments', balanceDue: 'Balance Due',
     backToPatients: 'Back to patients', notFoundMsg: 'not found.', paidLabel: 'Paid:',
+    quickActions: 'Quick Actions', cavity: 'Cavity', crown: 'Crown', extract: 'Extract', note: 'Note',
+    currentStatus: 'Current Status', condition: 'Condition', lastTreatment: 'Last Treatment', none: 'None',
+    xraysMedia: 'X-Rays & Media', panoramicXray: 'Panoramic X-ray', periapical: 'Periapical', uploadNew: 'Upload New',
+    activePrescriptions: 'Active Prescriptions', twiceDaily: 'Twice daily for 14 days',
   },
   session: {
     backBtn: 'Back', saveSession: 'Save Session', appointmentsLink: 'Appointments',
@@ -603,6 +607,10 @@ const fr: typeof en = {
     paymentHistory: 'Historique des paiements', noPayments: 'Aucun paiement',
     appointmentsCount: 'Rendez-vous', treatmentsCount: 'Traitements', balanceDue: 'Solde dû',
     backToPatients: 'Retour aux patients', notFoundMsg: 'introuvable.', paidLabel: 'Payé :',
+    quickActions: 'Actions rapides', cavity: 'Carie', crown: 'Couronne', extract: 'Extraire', note: 'Note',
+    currentStatus: 'État actuel', condition: 'Condition', lastTreatment: 'Dernier traitement', none: 'Aucun',
+    xraysMedia: 'Radiographies & Médias', panoramicXray: 'Radiographie panoramique', periapical: 'Périapicale', uploadNew: 'Télécharger nouveau',
+    activePrescriptions: 'Ordonnances actives', twiceDaily: 'Deux fois par jour pendant 14 jours',
   },
   session: {
     backBtn: 'Retour', saveSession: 'Enregistrer la session', appointmentsLink: 'Rendez-vous',
@@ -942,6 +950,10 @@ const ar: typeof en = {
     paymentHistory: 'سجل المدفوعات', noPayments: 'لا توجد مدفوعات',
     appointmentsCount: 'المواعيد', treatmentsCount: 'العلاجات', balanceDue: 'الرصيد المستحق',
     backToPatients: 'العودة إلى المرضى', notFoundMsg: 'غير موجود.', paidLabel: 'مدفوع:',
+    quickActions: 'إجراءات سريعة', cavity: 'تسوس', crown: 'تاج', extract: 'خلع', note: 'ملاحظة',
+    currentStatus: 'الحالة الحالية', condition: 'الحالة', lastTreatment: 'آخر علاج', none: 'لا يوجد',
+    xraysMedia: 'الأشعة والوسائط', panoramicXray: 'أشعة بانورامية', periapical: 'حول القمة', uploadNew: 'تحميل جديد',
+    activePrescriptions: 'الوصفات النشطة', twiceDaily: 'مرتين يومياً لمدة 14 يوماً',
   },
   session: {
     backBtn: 'رجوع', saveSession: 'حفظ الجلسة', appointmentsLink: 'المواعيد',
